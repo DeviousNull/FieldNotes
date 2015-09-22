@@ -206,6 +206,16 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                         'find': function(comment, post) {
                             return Meteor.users.find(comment.userID, {'fields': {username :1}})
                         }
+                    },
+                    { // Post Comment Influence (Public)
+                        'find': function(comment, post) {
+                            return Comment_ratings.find({'commentID': comment._id}, {'fields': {userID :0}});
+                        }
+                    },
+                    { // Post Comment Influence (Private)
+                        'find': function(comment, post) {
+                            return Comment_ratings.find({'commentID': comment._id, 'userID': this.userId});
+                        }
                     }
                 ]
             },
