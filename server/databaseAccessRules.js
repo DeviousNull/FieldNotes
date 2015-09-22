@@ -40,7 +40,7 @@ function aclUserIsAdmin(_userid, _doc, _fields, _modifier) {
 // ACL function
 // Returns true IFF the provided _userid is not null.
 function aclUserIsAuthed(_userid, _doc, _fields, _modifier) {
-    return (typeof _userid !== null);
+    return (!!_userid);
 }
 
 // ACL function factory

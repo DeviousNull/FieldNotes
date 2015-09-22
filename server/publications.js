@@ -179,7 +179,17 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                         'find': function(summary, post) {
                             return Meteor.users.find(summary.userID, {'fields': {username :1}})
                         }
-                    }
+                    },
+                    { // Post Summary Quality Ratings (Public)
+                        'find': function(summary, post) {
+                            return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
+                        },
+                    },
+                    { // Post Summary Quality Ratings (Private)
+                        'find': function(summary, post) {
+                            return Summary_ratings.find({'summaryID': summary._id, 'userID': this.userId});
+                        },
+                    },
                 ]
             },
             { // Post Tags

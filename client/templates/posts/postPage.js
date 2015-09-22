@@ -49,7 +49,10 @@ Template.postPage.events({
     },
 
     'click #user-rating': function(e) {
-        var user_rating = Post_quality_ratings.findOne({'userID': Meteor.userId()});
+        var user_rating = Post_quality_ratings.findOne({
+            'userID': Meteor.userId(),
+            'postID': Template.instance().data._id
+        });
 
         if (!user_rating) {
             Post_quality_ratings.insert({
