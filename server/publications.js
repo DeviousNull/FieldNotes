@@ -138,7 +138,12 @@ Meteor.publishComposite('retrievePostsList', { // All Posts
             'find': function(post) {
                 return Meteor.users.find(post.userID, {'fields': {'username':1}});
             }
-        }
+        },
+        { // Post Ratings (Public)
+            'find': function(post) {
+                return Post_quality_ratings.find({'postID': post._id}, {'fields': {userID :0}});
+            }
+        },
     ]
 });
 
