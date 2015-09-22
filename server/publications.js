@@ -341,7 +341,14 @@ Meteor.publishComposite('retrieveSummaryList', { // All Posts
         { // Post Summaries
             'find': function(post) {
                 return Summaries.find({'postID': post._id});
-            }
+            }, // Post Summary Quality Ratings (Public)
+            'children': [
+                { 
+                    'find': function(summary, post) {
+                        return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
+                    },
+                },
+            ]
         }
     ]
 });
@@ -362,7 +369,14 @@ Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
             { // Post Summaries
                 'find': function(post) {
                     return Summaries.find({'postID': post._id});
-                }
+                }, // Post Summary Quality Ratings (Public)
+                'children': [
+                    { 
+                        'find': function(summary, post) {
+                            return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
+                        },
+                    },
+                ]
             }
         ]
     };
