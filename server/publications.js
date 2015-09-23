@@ -255,6 +255,16 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
                         'find': function(post, category) {
                             return Summaries.find({'postID': post._id});
                         },
+                    },
+                    { // Category Post Comment Influence (Public)
+                        'find': function(post, category) {
+                            return Post_influence_ratings.find({'postID': post._id}, {'fields': {userID :0}});
+                        }
+                    },
+                    { // Category Post Comment Influence (Private)
+                        'find': function(post, category) {
+                            return Post_influence_ratings.find({'postID': post._id, 'userID': this.userId});
+                        }
                     }
                 ]
             }
