@@ -160,6 +160,118 @@ if(Posts.find().count() === 0) {
         definedTermIDArray : [ TermsData[3]['_id'] ],
         usedTermIDArray : [ TermsData[1]['_id'] ]
     });
+    Posts.insert({
+        userID : UsersData[2]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "The Monotonic Bounded Hirsch Conjecture is False for Dimension at Least 4.",
+        pop_rating : 453,
+        quality_rating : 4,
+        numRaters : 2333,
+        doi : '1287' ,
+        author : "Michael Todd",
+        publisher : "Mathematics of Operations Research",
+        publish_date : "01/11/1980",
+        categoryID : Categories.find().fetch()[3]['_id'],
+        definedTermIDArray : [ TermsData[3]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
+    Posts.insert({
+        userID : UsersData[1]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "Dynamic Programming Algorithms for the Zero-One Knapsack Problem",
+        pop_rating : 293,
+        quality_rating : 2,
+        numRaters : 413,
+        doi : '12555' ,
+        author : "P. Toth",
+        publisher : "Computing Something",
+        publish_date : "7/4/1980",
+        categoryID : Categories.find().fetch()[0]['_id'],
+        definedTermIDArray : [ TermsData[0]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
+    Posts.insert({
+        userID : UsersData[2]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "On Minimum-Maximal Matching in Series-Parallel Graphs",
+        pop_rating : 55,
+        quality_rating : 4,
+        numRaters : 232,
+        doi : '12555' ,
+        author : "M. B. Richey, Gary Parker",
+        publisher : "Science Publications",
+        publish_date : "7/29/1997",
+        categoryID : Categories.find().fetch()[0]['_id'],
+        definedTermIDArray : [ TermsData[0]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
+    Posts.insert({
+        userID : UsersData[0]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "Linear Time Algorithms for Linear Programming in ${R}^3$ and Related Problems",
+        pop_rating : 23,
+        quality_rating : 3,
+        numRaters : 32,
+        doi : '12555' ,
+        author : "Nimrod Megiddo",
+        publisher : "Society for Industrial and Applied Mathematics",
+        publish_date : "5/4/1983",
+        categoryID : Categories.find().fetch()[0]['_id'],
+        definedTermIDArray : [ TermsData[0]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
+    Posts.insert({
+        userID : UsersData[0]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "The Matroid Matching Problem",
+        pop_rating : 12,
+        quality_rating : 5,
+        numRaters : 14,
+        doi : '12555' ,
+        author : "L Lovasz",
+        publisher : "Elsevier",
+        publish_date : "11/12/1980",
+        categoryID : Categories.find().fetch()[1]['_id'],
+        definedTermIDArray : [ TermsData[0]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
+    Posts.insert({
+        userID : UsersData[1]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "Paths, Trees and Flowers",
+        pop_rating : 170,
+        quality_rating : 3,
+        numRaters : 211,
+        doi : '12555' ,
+        author : "Jack Edmonds",
+        publisher : "Canadian Journal of Mathematics",
+        publish_date : "3/5/1965",
+        categoryID : Categories.find().fetch()[4]['_id'],
+        definedTermIDArray : [ TermsData[0]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
+    Posts.insert({
+        userID : UsersData[1]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
+        title : "The Simplex Method is Very Good! -- On the Expected Number of Pivot Steps and Related Properties of Random Linear Programs",
+        pop_rating : 293,
+        quality_rating : 2,
+        numRaters : 413,
+        doi : '12555' ,
+        author : "Mordecai Haimovich",
+        publisher : "Columbia Univ.",
+        publish_date : "2/1/1996",
+        categoryID : Categories.find().fetch()[0]['_id'],
+        definedTermIDArray : [ TermsData[0]['_id'] ],
+        usedTermIDArray : [ TermsData[1]['_id'] ]
+    });
 }
 var PostsData = Posts.find().fetch();
 
@@ -229,9 +341,59 @@ if(Summaries.find().count() === 0) {
     Summaries.insert({
         userID : UsersData[2]['_id'],
         postID : PostsData[2]['_id'],
-        text: "Test.",
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
         quality_rating : 4.2,
         numRaters : 6
+    });
+
+    Summaries.insert({
+        userID : UsersData[0]['_id'],
+        postID : PostsData[3]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis urna quis mollis varius. Nullam in porta elit, vel pretium ante. Sed ac aliquam ligula, non fermentum nibh. Etiam varius mi ex. Phasellus condimentum dapibus aliquet. Sed sed finibus eros, accumsan gravida diam. Vivamus dignissim auctor laoreet. Nullam laoreet, enim eu placerat lacinia, lorem ipsum vulputate justo, eu consequat nibh sem sed diam. Aenean porta rutrum sodales.",
+        quality_rating : 3,
+        numRaters : 7
+    });
+    Summaries.insert({
+        userID : UsersData[2]['_id'],
+        postID : PostsData[4]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rutrum malesuada arcu sit amet rutrum. Duis posuere justo ac nisl elementum viverra. Integer accumsan ex quis pretium gravida. Pellentesque porta.",
+        quality_rating : 6.2,
+        numRaters : 66
+    });
+    Summaries.insert({
+        userID : UsersData[1]['_id'],
+        postID : PostsData[5]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
+        quality_rating : 2.8,
+        numRaters : 10
+    });
+    Summaries.insert({
+        userID : UsersData[0]['_id'],
+        postID : PostsData[6]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis urna quis mollis varius. Nullam in porta elit, vel pretium ante. Sed ac aliquam ligula, non fermentum nibh. Etiam varius mi ex. Phasellus condimentum dapibus aliquet. Sed sed finibus eros, accumsan gravida diam. Vivamus dignissim auctor laoreet. Nullam laoreet, enim eu placerat lacinia, lorem ipsum vulputate justo, eu consequat nibh sem sed diam. Aenean porta rutrum sodales.",
+        quality_rating : 4.2,
+        numRaters : 9
+    });
+    Summaries.insert({
+        userID : UsersData[0]['_id'],
+        postID : PostsData[7]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
+        quality_rating : 4.8,
+        numRaters : 31
+    });
+    Summaries.insert({
+        userID : UsersData[2]['_id'],
+        postID : PostsData[8]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis urna quis mollis varius. Nullam in porta elit, vel pretium ante. Sed ac aliquam ligula, non fermentum nibh. Etiam varius mi ex. Phasellus condimentum dapibus aliquet. Sed sed finibus eros, accumsan gravida diam. Vivamus dignissim auctor laoreet. Nullam laoreet, enim eu placerat lacinia, lorem ipsum vulputate justo, eu consequat nibh sem sed diam. Aenean porta rutrum sodales.",
+        quality_rating : 4.2,
+        numRaters : 3
+    });
+    Summaries.insert({
+        userID : UsersData[1]['_id'],
+        postID : PostsData[9]['_id'],
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
+        quality_rating : 5,
+        numRaters : 5
     });
 }
 var SummaryData = Summaries.find().fetch();
