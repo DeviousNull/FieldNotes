@@ -4,8 +4,11 @@ section {
 
 .body  {
   padding-top:7px;
+
 }
 #jumbo {
+  
+   
   font-size: 40px;
   padding: 10px;
   color:#3854A8; 
@@ -27,4 +30,11 @@ section {
   padding: 10px;
   color:#FFFFFF; 
   font-family:Trebuchet MS;
+}
+.content{
+    width:1000px;
+}
+.jumbotron{
+    width:100%;
+    overflow-x:auto;
 }

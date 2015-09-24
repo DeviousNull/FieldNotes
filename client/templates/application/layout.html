@@ -1,5 +1,9 @@
 <template name="layout">
     <script rel="stylesheet" type="text/css" src="layout.css"></script>
+        <link rel="stylesheet" href="/path/to/jquery.mCustomScrollbar.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="/path/to/jquery.mCustomScrollbar.concat.min.js"></script>
+
     <div class="navbar navbar-default navbar-inverse navbar-static-top" id="navbar">
         <div class="container">
             <div class="navbar-header">
@@ -21,47 +25,66 @@
             <div class="col-sm-2"><li role="presentation"><a href="{{pathFor 'submitPage'}}"><h4>Submit Paper</h4></a></li></div>
             <div class="col-sm-2"><li role="presentation"><a href="{{pathFor 'dictionaries'}}"><h4>Dictionary</h4></a></li></div>
             <div class="col-sm-2"><li role="presentation"><a href="{{pathFor 'searchTemplate'}}"><h4>Search</h4></a></li></div>
-       
+             <div class="col-sm-2">               <li class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="">Category
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+  {{#each categories}}
+    <li><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
+    {{/each}}
+
+  </ul>  </li> </div>
     
             <div class="col-sm-2"><li class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     {{> loginButtons align="right"}}
                     {{setNewUserRole}}
                 </ul>
+               
             </li></div>
              </ul>
             </div>
         </div>
     </div> <!-- /Nav bar -->
-    
+    <body>
    <div class="jumbotron" id="jumbo" > <!-- JUMBO TRON -->
-
+        
         <p>
-            
-  
-
-           <ul class="nav nav-tabs nav-justified">
+        <div class="content">
+         <ul class="nav nav-tabs nav-justified">
+           <button class="scroller scroller-left" type="button" style="float: left">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                </button>
+             
                 {{#each categories}}
+                 
                     <li role="presentation"><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
-                {{/each}}
-                <li role="presentation" class="text-right"><a><span class="glyphicon glyphicon-plus"></span></a></li>
                 
-                <li class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="">Category
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li><a href="#">Category1</a></li>
-    <li><a href="#">Category2</a></li>
-    <li><a href="#">Category3</a></li>
-  </ul>
-  </li>
+                {{/each}}
+          
+             <li class="scroller scroller-right" type="button">
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </li>
+                   {{#if isAdmin}}
+                <li role="presentation" class="text-right" ><a  href="{{pathFor 'newCategory'}}"><span class="glyphicon glyphicon-plus"></span></a></li>
+                {{/if}}
+ 
 
-</ul>
+
+
+        </ul>
+
+ </div>
         </p>
+
+       
     </div> <!-- /JUMBO TRON -->
+    
+    </body>
     <section>
         <div class="container">
             {{> yield}}
         </div>
     </section>
 </template>
+

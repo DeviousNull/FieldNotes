@@ -1,50 +1,31 @@
 <template name="searchTemplate">
+    <div class="col-md-8 center-block">
+        <div class="search_div">
+            {{> esInput id="search_input" class="search_input" index=indexes timeout="1000" placeholder="Search..." }}
 
-    <div class="search-input" id="searchfield">
-        <!-- Search Box -->
-        <form>
-        {{> esInput index=indexes placeholder="Search..." }}
-        </form>
+            <ul class="search_results">
+                {{#ifEsIsSearching id="search_input" index="posts"}}
+                <li>Searching...</li>
+                {{/ifEsIsSearching}}
+
+                {{#ifEsHasNoResults id="search_input" index=indexes}}
+                <li>No results found.</li>
+                {{/ifEsHasNoResults}}
+
+                {{#esEach id="search_input" index="posts"}}
+                <li>Paper: <a href="{{pathFor 'postPage'}}"> {{>titleTemplate}} {{author}} </a></li>
+                {{/esEach}}
+
+                {{#esEach id="search_input" index="dictionary"}}
+                <li>Dictionary: <a href="{{pathFor 'dictionaryPage'}}">{{name}} </a></li>
+                {{/esEach}}
+
+                {{#esEach id="search_input" index="terms"}}
+                <li>Term: <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a></li>
+                {{/esEach}}
+            </ul>
+        </div>
     </div>
-   
-    <!--<div class ="jumbotron">-->
-    <div class="results-wrapper">
-           
-  
-        <ul>
-            <!-- Loop over the results from posts -->
-            {{#esEach index="posts"}}
-                <li>Post: <a href="{{pathFor 'postPage'}}"> {{>titleTemplate}} {{author}} </a></li>
-            {{/esEach}}
-        </ul>
-        <ul>
-            <!-- Loop over the results from dictionary -->
-            {{#esEach index="dictionary"}}
-                <li>Dictionary Name: <a href="{{pathFor 'dictionaryPage'}}">{{name}} </a></li>
-            {{/esEach}}
-        </ul>
-        <ul>
-            <!-- Loop over the results from terms -->
-            {{#esEach index="terms"}}
-                <li>Term Name: <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a></li>
-            {{/esEach}}
-        
-       </ul>
-       
-    </div>
-
-    <!-- Load more results from posts if we have more than the limit set in search.js -->
-    {{> esLoadMoreButton index="posts"}}
-
-    <!-- If ES has no results for the posts collection -->
-    {{#ifEsHasNoResults index="posts"}}
-        <div class="no-results">No results found!</div>
-    {{/ifEsHasNoResults}}
-
-    <!-- If ES is still searching display loading -->
-    {{#ifEsIsSearching index="posts"}}
-            <div>Loading...</div>
-    {{/ifEsIsSearching}}
 </template>
 
 
