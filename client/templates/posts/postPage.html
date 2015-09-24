@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="col-md-7">
-                    <span>{{#mathjax}}<h2 style="display: inline;">{{>titleTemplate}}</h2>{{/mathjax}}</span>
+                    <span><h2 style="display: inline;">{{>titleTemplate}}</h2></span>
                 </div>
                 <div class="col-md-3">
                     <span> <h3 style="display: inline;">Posted by: {{ findUser userID }}</h3></span>
@@ -112,7 +112,9 @@
             </div>
             <div class="col-md-4">
                 {{#each tags}}
+                {{#mathjax}}
                 <a href="{{pathFor 'tagPage'}}">{{tag}}</a>
+                {{/mathjax}}
                 {{#if loggedIn}}
                 <span id="remove_tag" tag="{{tag}}" tag_id="{{_id}}" class="glyphicon glyphicon-remove" style="color:red"></span>
                 {{/if}}
