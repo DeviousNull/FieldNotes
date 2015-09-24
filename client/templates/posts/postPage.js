@@ -49,7 +49,10 @@ Template.postPage.events({
     },
 
     'click #user-rating': function(e) {
-        var user_rating = Post_quality_ratings.findOne({'userID': Meteor.userId()});
+        var user_rating = Post_quality_ratings.findOne({
+            'userID': Meteor.userId(),
+            'postID': Template.instance().data._id
+        });
 
         if (!user_rating) {
             Post_quality_ratings.insert({
@@ -147,16 +150,16 @@ Template.postPage.helpers({
         var all_ratings = Post_quality_ratings.find({
             'postID': Template.instance().data._id,
         });
-        
+
         if (all_ratings.count() == 0) {
             return -1;
         }
-        
+
         var total = 0;
         all_ratings.forEach(function(current) {
             total += current.rating;
         });
-        
+
         return (total / all_ratings.count());
     },
 

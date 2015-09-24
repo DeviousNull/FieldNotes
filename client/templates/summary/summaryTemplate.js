@@ -1,33 +1,64 @@
 Template.summaryTemplate.events({
-
-    //Rated event for summaries
-    'rated': function(event,value){
-        $('[id=rateitDiv' + this._id +']').attr("class","rateit summaryRating");
-
-        var summaryID = this._id;
-
-        var foundSummary = Summaries.findOne(summaryID);
-
-        var oldProduct = foundSummary.quality_rating * foundSummary.numRaters;
-
-        var updatedNumRaters = foundSummary.numRaters + 1;
-
-        //Rebind the rated event
-        $("#rateitDiv"+summaryID).bind('rated', function (event, value) {
-            var newProduct = oldProduct + value;
-
-            var updatedValue = newProduct / updatedNumRaters;
-
-            console.log(updatedValue, updatedNumRaters);
-
-            Summaries.update({_id: summaryID}, {$set: {quality_rating: updatedValue, numRaters: updatedNumRaters}});
+    'click #summary-user-rating': function(e) {
+        var user_rating = Summary_ratings.findOne({
+            'userID': Meteor.userId(),
+            'summaryID': Template.instance().data._id,
         });
-    }
+
+        if (!user_rating) {
+            Summary_ratings.insert({
+                'userID': Meteor.userId(),
+                'summaryID': Template.instance().data._id,
+                'rating': Template.instance().$('#summary-user-rating').data('userrating'),
+            });
+        } else if (user_rating.rating != Template.instance().$('#summary-user-rating').data('userrating')) {
+            Summary_ratings.update(user_rating._id, {
+                '$set': {
+                    'rating': Template.instance().$('#summary-user-rating').data('userrating'),
+                }
+            });
+        } else {
+            Summary_ratings.remove(user_rating._id);
+        }
+    },
 });
 
 Template.summaryTemplate.helpers({
     'markdownedText': function() {
         var converter = new Showdown.converter();
         return converter.makeHtml(this.text);
-    }
+    },
+
+    'summary_quality_rating': function() {
+        var all_ratings = Summary_ratings.find({
+            'summaryID': Template.instance().data._id,
+        });
+
+        if (all_ratings.count() == 0) {
+            return -1;
+        }
+
+        var total = 0;
+        all_ratings.forEach(function(current) {
+            total += current.rating;
+        });
+
+        return (total / all_ratings.count());
+    },
+
+    'summary_user_rating': function() {
+        if (!Meteor.userId()) {
+            return -1;
+        } else {
+            var user_rating = Summary_ratings.findOne({
+                'userID': Meteor.userId(),
+                'summaryID': Template.instance().data._id,
+            });
+            if (user_rating) {
+                return user_rating.rating;
+            } else {
+                return -1;
+            }
+        }
+    },
 });

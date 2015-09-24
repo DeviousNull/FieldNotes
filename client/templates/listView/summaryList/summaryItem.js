@@ -25,6 +25,23 @@ Template.summaryItem.helpers({
     'postLinkData': function() {
         var summary = Summaries.findOne({_id: this._id});
         return {_id: summary.postID};
-    }
+    },
+
+    'summary_quality_rating': function() {
+        var all_ratings = Summary_ratings.find({
+            'summaryID': Template.instance().data._id,
+        });
+
+        if (all_ratings.count() == 0) {
+            return -1;
+        }
+
+        var total = 0;
+        all_ratings.forEach(function(current) {
+            total += current.rating;
+        });
+
+        return (total / all_ratings.count());
+    },
 
 });

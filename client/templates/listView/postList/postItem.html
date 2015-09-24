@@ -5,7 +5,7 @@
       <div class="panel panel-primary">
         <div class="panel-heading">
           <a href="{{pathFor 'postPage'}}" class="panel-title">{{>titleTemplate}}</a>
-          <span style="float: right">Rating: {{pop_rating}}</span>
+          <span style="float: right">Rating: {{influence}}</span>
         </div>
         <div class="body">
 
@@ -24,7 +24,7 @@
               <span>Rating: </span>
             </div>
             <div class="col-md-3">
-              {{> uneditableRateItTemplate}}
+              {{> starsRating rating=community_quality_rating}}
             </div>
             <div class="col-md-3">
               <a href="{{doi}}">{{doi}}</a>
@@ -35,13 +35,13 @@
     </div> <!-- 2nd column -->
     <div class="col-md-1" id="voteArrows" style="height: inherit">
         <div class="row">
-          <button name="upArrow{{_id}}" class="btn btn-default upArrowButton">
-            <span name="upArrowButton{{_id}}" class="glyphicon glyphicon-arrow-up"></span>
+          <button id="upvote-button" class="btn btn-default {{#if up_pressed}}pressed btn-info{{/if}}">
+            <span class="glyphicon glyphicon-arrow-up"></span>
           </button>
         </div>
         <div class="row">
-          <button name="downArrow{{_id}}" class="btn btn-default downArrowButton">
-            <span name="downArrowButton{{_id}}" class="glyphicon glyphicon-arrow-down"></span>
+          <button id="downvote-button" class="btn btn-default {{#if down_pressed}}pressed btn-danger{{/if}}">
+            <span class="glyphicon glyphicon-arrow-down"></span>
           </button>
         </div>
     </div>
