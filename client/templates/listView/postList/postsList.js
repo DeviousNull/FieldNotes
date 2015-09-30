@@ -1,5 +1,9 @@
 Template.postsList.helpers({
-    Post: function() {
-        return Posts.find();
+    'posts': function() {
+        if (!Template.instance().data) {
+            return Posts.find();
+        } else {
+            return Template.instance().data;
+        }
     }
 });

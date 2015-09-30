@@ -12,11 +12,16 @@
 }
 
 .search_results {
-    display: block;
+    display: none;
     position:absolute;
     width: 95%;
     padding: 0px;
     list-style: none;
+    z-index: 1;
+}
+
+.search_results_active {
+    display: block;
 }
 
 .search_results li {

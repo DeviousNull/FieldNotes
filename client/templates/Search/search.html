@@ -3,7 +3,7 @@
         <div class="search_div">
             {{> esInput id="search_input" class="search_input" index=indexes timeout="1000" placeholder="Search..." }}
 
-            <ul class="search_results">
+            <ul class="search_results {{#if search_input_has_focus}}search_results_active{{/if}}">
                 {{#ifEsIsSearching id="search_input" index="posts"}}
                 <li>Searching...</li>
                 {{/ifEsIsSearching}}
@@ -25,6 +25,11 @@
                 {{/esEach}}
             </ul>
         </div>
+        {{#unless search_input_has_focus}}
+        {{#with post_list}}
+        {{> postsList}}
+        {{/with}}
+        {{/unless}}
     </div>
 </template>
 
