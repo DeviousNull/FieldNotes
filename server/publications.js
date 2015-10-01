@@ -138,6 +138,21 @@ Meteor.publishComposite('retrievePostsList', { // All Posts
             'find': function(post) {
                 return Meteor.users.find(post.userID, {'fields': {'username':1}});
             }
+        },
+        { // Post Ratings (Public)
+            'find': function(post) {
+                return Post_quality_ratings.find({'postID': post._id}, {'fields': {userID :0}});
+            }
+        },
+        { // Post Influence (Public)
+            'find': function(post) {
+                return Post_influence_ratings.find({'postID': post._id}, {'fields': {userID :0}});
+            }
+        },
+        { // Post Influence (Private)
+            'find': function(post) {
+                return Post_influence_ratings.find({'postID': post._id, 'userID': this.userId});
+            }
         }
     ]
 });
@@ -174,7 +189,17 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                         'find': function(summary, post) {
                             return Meteor.users.find(summary.userID, {'fields': {username :1}})
                         }
-                    }
+                    },
+                    { // Post Summary Quality Ratings (Public)
+                        'find': function(summary, post) {
+                            return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
+                        },
+                    },
+                    { // Post Summary Quality Ratings (Private)
+                        'find': function(summary, post) {
+                            return Summary_ratings.find({'summaryID': summary._id, 'userID': this.userId});
+                        },
+                    },
                 ]
             },
             { // Post Tags
@@ -190,6 +215,16 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                     { // Post Comment Submitter
                         'find': function(comment, post) {
                             return Meteor.users.find(comment.userID, {'fields': {username :1}})
+                        }
+                    },
+                    { // Post Comment Influence (Public)
+                        'find': function(comment, post) {
+                            return Comment_ratings.find({'commentID': comment._id}, {'fields': {userID :0}});
+                        }
+                    },
+                    { // Post Comment Influence (Private)
+                        'find': function(comment, post) {
+                            return Comment_ratings.find({'commentID': comment._id, 'userID': this.userId});
                         }
                     }
                 ]
@@ -230,6 +265,16 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
                         'find': function(post, category) {
                             return Summaries.find({'postID': post._id});
                         },
+                    },
+                    { // Category Post Comment Influence (Public)
+                        'find': function(post, category) {
+                            return Post_influence_ratings.find({'postID': post._id}, {'fields': {userID :0}});
+                        }
+                    },
+                    { // Category Post Comment Influence (Private)
+                        'find': function(post, category) {
+                            return Post_influence_ratings.find({'postID': post._id, 'userID': this.userId});
+                        }
                     }
                 ]
             }
@@ -326,7 +371,14 @@ Meteor.publishComposite('retrieveSummaryList', { // All Posts
         { // Post Summaries
             'find': function(post) {
                 return Summaries.find({'postID': post._id});
-            }
+            }, // Post Summary Quality Ratings (Public)
+            'children': [
+                { 
+                    'find': function(summary, post) {
+                        return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
+                    },
+                },
+            ]
         }
     ]
 });
@@ -347,7 +399,14 @@ Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
             { // Post Summaries
                 'find': function(post) {
                     return Summaries.find({'postID': post._id});
-                }
+                }, // Post Summary Quality Ratings (Public)
+                'children': [
+                    { 
+                        'find': function(summary, post) {
+                            return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
+                        },
+                    },
+                ]
             }
         ]
     };
