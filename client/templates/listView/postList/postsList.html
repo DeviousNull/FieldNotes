@@ -1,7 +1,11 @@
 <template name="postsList">
-    <a class="btn btn-default" href="{{pathFor 'summaryList'}}">Summaries</a>
+<ul class="nav nav-tabs">
+   <li role="presentation" class="active"><a data-toggle="tab" href="{{pathFor 'summaryList'}}">Summaries</a></li>
+    <li><a data-toggle="tab" href="{{pathFor 'postsList'}}">Papers</a></li>
+  
+ </ul>
+ {{#each Post}}
+    {{> postItem}}
+{{/each}}
 
-    {{#each Post}}
-        {{> postItem}}
-    {{/each}}
 </template>

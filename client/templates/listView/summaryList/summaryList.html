@@ -1,10 +1,14 @@
 <template name="summaryList">
 <div class="row">
     <div class="col-md-3">
-        <a class="btn btn-default" href="{{pathFor 'postsList'}}">Papers</a>
+    <ul class="pager">
+    <li><a href="{{pathFor 'summaryList'}}">Summaries</a></li>
+    <li><a href="{{pathFor 'postsList'}}">Papers</a></li>
+    </ul>
+       
     </div>
-</div>
 
+</div>
 
 {{#each Summaries}}
     {{> summaryItem}}
