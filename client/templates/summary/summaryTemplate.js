@@ -63,7 +63,6 @@ Template.summaryTemplate.helpers({
     },
 
     'is_official_abstract': function() {
-        console.log("ABS", Template.instance().data.isOfficialAbstract);
         return Template.instance().data.isOfficialAbstract;
     },
 });
