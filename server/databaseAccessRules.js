@@ -287,11 +287,10 @@ var validationList = {
     'Summaries' : {
         'key': [],
         'format': {
-            'userID':         valIsCurrentUserID,
-            'postID':         valIsForeignKey(Posts),
-            'text':           valMatches(String),
-            'quality_rating': valMatches(Number),
-            'numRaters':      valMatches(Number),
+            'userID':             valIsCurrentUserID,
+            'postID':             valIsForeignKey(Posts),
+            'text':               valMatches(String),
+            'isOfficialAbstract': valMatches(Boolean),
         },
         'references': [
             {'summaryID': Summary_ratings},

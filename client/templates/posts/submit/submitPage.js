@@ -47,8 +47,7 @@ Template.submitPage.events({
             userID: Meteor.user()._id,
             postID: post._id,
             text: Template.instance().$('[name=summary]').val(),
-            quality_rating : 0,
-            numRaters : 0
+            isOfficialAbstract: Template.instance().$('input[name=is-official-abstract]').is(":checked"),
         };
 
         Summaries.insert(summary);
