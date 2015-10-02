@@ -61,4 +61,8 @@ Template.summaryTemplate.helpers({
             }
         }
     },
+
+    'is_official_abstract': function() {
+        return Template.instance().data.isOfficialAbstract;
+    },
 });

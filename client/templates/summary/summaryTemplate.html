@@ -4,7 +4,7 @@
             <div></div>
             Community Rating:{{> starsRating rating=summary_quality_rating}}
             Rate this Summary:{{> starsRating id="summary-user-rating" rating=summary_user_rating mutable=true}}
-            <div class="well well-lg">
+            <div class="well well-lg" style="{{#if is_official_abstract}}background: #aaf{{/if}}">
                 <div>
                     {{#if isAdmin}}
                     <button class="btn btn-sm btn-danger deleteSummary" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>

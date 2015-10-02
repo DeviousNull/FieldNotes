@@ -7,14 +7,12 @@ Template.submitSummary.events({
     * @param {e} button click event.
     */
     'click input[name=submitSummaryButton]': function(e) {
-        console.log(e);
         //Insert the new summary
         var summary = {
             userID: Meteor.user()._id,
             postID: this._id,
             text: Template.instance().$('textarea[name=summary]').val(),
-            quality_rating : 0,
-            numRaters : 0
+            isOfficialAbstract: Template.instance().$('input[name=is-official-abstract]').is(":checked"),
         };
 
         Summaries.insert(summary);
