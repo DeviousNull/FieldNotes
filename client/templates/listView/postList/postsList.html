@@ -2,7 +2,7 @@
 <div class="nav nav-tabs">
 <li role="presentation" class="active"><a href="{{pathFor 'summaryList'}}">Summaries</a></li>
 <li role="presentation" class="active"><a href="{{pathFor 'postsList'}}">Papers</a></li>
-    {{#each Post}}
+    {{#each posts}}
         {{> postItem}}
     {{/each}}
     </div>
