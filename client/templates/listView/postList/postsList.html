@@ -1,9 +1,9 @@
-<template name="postsList">
-    <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a data-toggle="tab" href="{{pathFor 'summaryList'}}">Summaries</a></li>
-        <li><a data-toggle="tab" href="{{pathFor 'postsList'}}">Papers</a></li>
-    </ul>
+<template name="postsList" >
+<div class="nav nav-tabs">
+<li role="presentation" class="active"><a href="{{pathFor 'summaryList'}}">Summaries</a></li>
+<li role="presentation" class="active"><a href="{{pathFor 'postsList'}}">Papers</a></li>
     {{#each posts}}
         {{> postItem}}
     {{/each}}
+    </div>
 </template>
