@@ -79,6 +79,26 @@ if(Terms.find().count() === 0) {
         term_name : 'Proof by induction',
         dictionaryID : Dictionaries.find().fetch()[2]['_id']
     });
+ 
+    var min_terms=50,max_terms=250;
+    
+    //50-250 terms per dictionary
+    for(var a=0; a<4;a++)
+        for(var b=0,c=get_rand(min_terms,max_terms);b<c;b++){
+
+            term_id= Terms.insert({
+                        term_name : gen_lorem_ipsum(1,3,0),
+                        dictionaryID : Dictionaries.find().fetch()[a]['_id']
+                    });
+            for(var f=0,g=get_rand(0,2);f<g;f++)
+                Definitions.insert({
+                    termID : term_id,
+                    userID : UsersData[get_rand(0,2)]['_id'],
+                    text : gen_lorem_ipsum(3,10,1),
+                    quality_rating : 4,
+                    numRaters : 1
+                });
+        }
 }
 var TermsData = Terms.find().fetch();
 
@@ -108,10 +128,60 @@ if(Categories.find().count() === 0) {
         parentID : Categories.find().fetch()[3]['_id']
     });
 }
-var CategoriesData = Categories.find().fetch();
 
+var num_cats = 12;
 
-if(Posts.find().count() === 0) {
+for(var d=0;d<num_cats;d++)
+        Categories.insert({
+            category_name : gen_lorem_ipsum(1,2,0).slice(0,-1),
+            parentID : 0
+        });
+
+var num_posts = 30;
+
+for(var i=0;i<num_posts;i++){
+    var num_raters = get_rand(1,1000),
+    pop_rate = get_rand(1,num_raters);
+
+    var j = Posts.insert({
+                userID : UsersData[get_rand(0,2)]['_id'],
+                createdAt: moment(),
+                modifiedAt: moment(),
+                title : (gen_lorem_ipsum(1,15,1)),
+                pop_rating : pop_rate,
+                quality_rating : (Math.random()*(5)),
+                numRaters : num_raters,
+                doi : '10.1016/j.iheduc.2008.03.001' ,
+                author : gen_lorem_ipsum(2,3,0),
+                publisher : gen_lorem_ipsum(2,3,0),
+                publish_date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+get_rand(1800,2015),
+
+                categoryID : Categories.find().fetch()[get_rand(0,14)]['_id'],
+                definedTermIDArray : [ TermsData[0]['_id'] ],
+                usedTermIDArray : [ TermsData[1]['_id'] ]   
+            });
+    
+    for(var k=0,n=get_rand(1,10);k<n;k++){
+
+        Comments.insert({
+            userID : UsersData[get_rand(0,2)]['_id'],
+            parentID : '0', //No parent
+            postID : j,
+            text : gen_lorem_ipsum(1,30,1),
+            date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+2015
+        });
+
+        Summaries.insert({
+            userID : UsersData[get_rand(0,2)]['_id'],
+            postID : j,
+            text : gen_lorem_ipsum(10,150,1),
+            quality_rating : (Math.random()*(5)),
+            numRaters : get_rand(1,(num_raters/2))
+        });
+    }
+}
+
+/*
     Posts.insert({
         userID : UsersData[0]['_id'],
         createdAt: moment(),
@@ -160,123 +230,10 @@ if(Posts.find().count() === 0) {
         definedTermIDArray : [ TermsData[3]['_id'] ],
         usedTermIDArray : [ TermsData[1]['_id'] ]
     });
-    Posts.insert({
-        userID : UsersData[2]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "The Monotonic Bounded Hirsch Conjecture is False for Dimension at Least 4.",
-        pop_rating : 453,
-        quality_rating : 4,
-        numRaters : 2333,
-        doi : '1287' ,
-        author : "Michael Todd",
-        publisher : "Mathematics of Operations Research",
-        publish_date : "01/11/1980",
-        categoryID : Categories.find().fetch()[3]['_id'],
-        definedTermIDArray : [ TermsData[3]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[1]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "Dynamic Programming Algorithms for the Zero-One Knapsack Problem",
-        pop_rating : 293,
-        quality_rating : 2,
-        numRaters : 413,
-        doi : '12555' ,
-        author : "P. Toth",
-        publisher : "Computing Something",
-        publish_date : "7/4/1980",
-        categoryID : Categories.find().fetch()[0]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[2]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "On Minimum-Maximal Matching in Series-Parallel Graphs",
-        pop_rating : 55,
-        quality_rating : 4,
-        numRaters : 232,
-        doi : '12555' ,
-        author : "M. B. Richey, Gary Parker",
-        publisher : "Science Publications",
-        publish_date : "7/29/1997",
-        categoryID : Categories.find().fetch()[0]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[0]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "Linear Time Algorithms for Linear Programming in ${R}^3$ and Related Problems",
-        pop_rating : 23,
-        quality_rating : 3,
-        numRaters : 32,
-        doi : '12555' ,
-        author : "Nimrod Megiddo",
-        publisher : "Society for Industrial and Applied Mathematics",
-        publish_date : "5/4/1983",
-        categoryID : Categories.find().fetch()[0]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[0]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "The Matroid Matching Problem",
-        pop_rating : 12,
-        quality_rating : 5,
-        numRaters : 14,
-        doi : '12555' ,
-        author : "L Lovasz",
-        publisher : "Elsevier",
-        publish_date : "11/12/1980",
-        categoryID : Categories.find().fetch()[1]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[1]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "Paths, Trees and Flowers",
-        pop_rating : 170,
-        quality_rating : 3,
-        numRaters : 211,
-        doi : '12555' ,
-        author : "Jack Edmonds",
-        publisher : "Canadian Journal of Mathematics",
-        publish_date : "3/5/1965",
-        categoryID : Categories.find().fetch()[4]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[1]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "The Simplex Method is Very Good! -- On the Expected Number of Pivot Steps and Related Properties of Random Linear Programs",
-        pop_rating : 293,
-        quality_rating : 2,
-        numRaters : 413,
-        doi : '12555' ,
-        author : "Mordecai Haimovich",
-        publisher : "Columbia Univ.",
-        publish_date : "2/1/1996",
-        categoryID : Categories.find().fetch()[0]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-}
-var PostsData = Posts.find().fetch();
+    
 
+    var PostsData = Posts.find().fetch();
 
-if(Comments.find().count() === 0) {
     Comments.insert({
         userID : UsersData[0]['_id'],
         parentID : '0', //No parent
@@ -312,11 +269,9 @@ if(Comments.find().count() === 0) {
         text : "This is what I've been looking for.",
         date : "3/3/2015"
     });
-}
 
-var CommentsData = Comments.find().fetch();
+    var CommentsData = Comments.find().fetch();
 
-if(Summaries.find().count() === 0) {
     Summaries.insert({
         userID : UsersData[0]['_id'],
         postID : PostsData[0]['_id'],
@@ -338,65 +293,8 @@ if(Summaries.find().count() === 0) {
         quality_rating : 1,
         numRaters : 6
     });
-    Summaries.insert({
-        userID : UsersData[2]['_id'],
-        postID : PostsData[2]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
-        quality_rating : 4.2,
-        numRaters : 6
-    });
-
-    Summaries.insert({
-        userID : UsersData[0]['_id'],
-        postID : PostsData[3]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis urna quis mollis varius. Nullam in porta elit, vel pretium ante. Sed ac aliquam ligula, non fermentum nibh. Etiam varius mi ex. Phasellus condimentum dapibus aliquet. Sed sed finibus eros, accumsan gravida diam. Vivamus dignissim auctor laoreet. Nullam laoreet, enim eu placerat lacinia, lorem ipsum vulputate justo, eu consequat nibh sem sed diam. Aenean porta rutrum sodales.",
-        quality_rating : 3,
-        numRaters : 7
-    });
-    Summaries.insert({
-        userID : UsersData[2]['_id'],
-        postID : PostsData[4]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rutrum malesuada arcu sit amet rutrum. Duis posuere justo ac nisl elementum viverra. Integer accumsan ex quis pretium gravida. Pellentesque porta.",
-        quality_rating : 6.2,
-        numRaters : 66
-    });
-    Summaries.insert({
-        userID : UsersData[1]['_id'],
-        postID : PostsData[5]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
-        quality_rating : 2.8,
-        numRaters : 10
-    });
-    Summaries.insert({
-        userID : UsersData[0]['_id'],
-        postID : PostsData[6]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis urna quis mollis varius. Nullam in porta elit, vel pretium ante. Sed ac aliquam ligula, non fermentum nibh. Etiam varius mi ex. Phasellus condimentum dapibus aliquet. Sed sed finibus eros, accumsan gravida diam. Vivamus dignissim auctor laoreet. Nullam laoreet, enim eu placerat lacinia, lorem ipsum vulputate justo, eu consequat nibh sem sed diam. Aenean porta rutrum sodales.",
-        quality_rating : 4.2,
-        numRaters : 9
-    });
-    Summaries.insert({
-        userID : UsersData[0]['_id'],
-        postID : PostsData[7]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
-        quality_rating : 4.8,
-        numRaters : 31
-    });
-    Summaries.insert({
-        userID : UsersData[2]['_id'],
-        postID : PostsData[8]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis urna quis mollis varius. Nullam in porta elit, vel pretium ante. Sed ac aliquam ligula, non fermentum nibh. Etiam varius mi ex. Phasellus condimentum dapibus aliquet. Sed sed finibus eros, accumsan gravida diam. Vivamus dignissim auctor laoreet. Nullam laoreet, enim eu placerat lacinia, lorem ipsum vulputate justo, eu consequat nibh sem sed diam. Aenean porta rutrum sodales.",
-        quality_rating : 4.2,
-        numRaters : 3
-    });
-    Summaries.insert({
-        userID : UsersData[1]['_id'],
-        postID : PostsData[9]['_id'],
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae erat sit amet risus ultricies cursus. Proin ac ante dapibus, aliquet felis vel, accumsan lectus. Aenean venenatis eget nisi a congue. Phasellus dignissim ligula id mattis sagittis. Etiam eget risus sed dui semper pharetra ut sit amet lorem. Duis ligula mauris, pulvinar sit amet vestibulum sit amet, luctus ac nisl. Ut commodo eget nulla eget malesuada. Vestibulum odio libero, congue non molestie vitae, vestibulum eu massa. Vivamus at bibendum lacus, venenatis interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque facilisis erat ex, quis tristique sem tristique eget. Suspendisse suscipit massa diam, ac posuere erat interdum id. Phasellus pretium nisi nec elit malesuada rutrum.",
-        quality_rating : 5,
-        numRaters : 5
-    });
+    var SummaryData = Summaries.find().fetch();
 }
-var SummaryData = Summaries.find().fetch();
 
 if(Definitions.find().count() === 0) {
     Definitions.insert({
@@ -437,7 +335,7 @@ if(Definitions.find().count() === 0) {
 }
 
 var DefinitionData = Definitions.find().fetch();
-
+*/
 
 if(Adminlabels.find().count() === 0) {
     Adminlabels.insert({
@@ -450,6 +348,24 @@ if(Adminlabels.find().count() === 0) {
         label : 'Running time little-O',
         description : 'Running time is required for this term to be added to this dictionary'
     });
+
+    var num_labels = 5;
+
+    for(var e=0;e<num_labels;e++){
+        Adminlabels.insert({
+            dictionaryID : DictionaryData[get_rand(0,3)]['_id'],
+            label : gen_lorem_ipsum(1,3,1),
+            description : gen_lorem_ipsum(3,10,1)
+        });
+        /*
+        for()
+        Term_label_values.insert({
+            termID : TermsData[0]['_id'],
+            adminlabelsID : AdminLabelsData[0]['_id'],
+            value : "$n^2$"
+        });
+    */
+    }
 }
 var AdminLabelsData = Adminlabels.find().fetch();
 
@@ -471,4 +387,27 @@ if(Term_label_values.find().count() === 0) {
         adminlabelsID : AdminLabelsData[1]['_id'],
         value : "log(n)"
     });
+}
+
+//=================================================================================================================
+//generates text from 'min' to 'max', inclusive
+function gen_lorem_ipsum(min, max, mj){
+    var vocab = ["lorem","ipsum"," $X^Y$ "," $X_Y$ "," $A_b$ "," $A_B$ "," $\\sqrt{a+b}$ "," $\\delta$ "," $\\sum_i^n$ ","amet,","consectetur","adipisicing","elit,","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua.","enim","ad","minim","veniam,","quis","nostrud","exercitation","ullamco","laboris","nisi","ut","aliquip","ex","ea","commodo","consequat.","duis","aute","irure","dolor","in","reprehenderit","in","voluptate","velit","esse","cillum","dolore","eu","fugiat","nulla","pariatur.","excepteur","sint","occaecat","cupidatat","non","proident,","sunt","in","culpa","qui","officia","deserunt","mollit","anim","id","est","laborum.","sed","ut","perspiciatis,","unde","omnis","iste","natus","error","sit","voluptatem","accusantium","doloremque","laudantium,","totam","rem","aperiam","eaque","ipsa,","quae","ab","illo","inventore","veritatis","et","quasi","architecto"];
+    if(!mj) vocab=vocab.slice(10);
+
+    var rand_length = get_rand(min,max);
+    var text = "";
+
+    for(var i=0; i<rand_length; i++){
+        var new_word = vocab[get_rand(0,vocab.length - 1)];
+
+        if(!i || (text.slice(-1)==='.' || text.slice(-1)==='?'))
+            new_word = new_word[0].toUpperCase()+new_word.slice(1);
+
+        text += (i) ? " " + new_word : new_word;
+    }
+    return (text.substring(0,text.length-1)+".");
+}
+function get_rand(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min;
 }
