@@ -128,59 +128,59 @@ if(Categories.find().count() === 0) {
         parentID : Categories.find().fetch()[3]['_id']
     });
 }
+if(Posts.find().count() === 0){
+    var num_cats = 12;
 
-var num_cats = 12;
-
-for(var d=0;d<num_cats;d++)
-        Categories.insert({
-            category_name : gen_lorem_ipsum(1,2,0).slice(0,-1),
-            parentID : 0
-        });
-
-var num_posts = 30;
-
-for(var i=0;i<num_posts;i++){
-    var num_raters = get_rand(1,1000),
-    pop_rate = get_rand(1,num_raters);
-
-    var j = Posts.insert({
-                userID : UsersData[get_rand(0,2)]['_id'],
-                createdAt: moment(),
-                modifiedAt: moment(),
-                title : (gen_lorem_ipsum(1,15,1)),
-                pop_rating : pop_rate,
-                quality_rating : (Math.random()*(5)),
-                numRaters : num_raters,
-                doi : '10.1016/j.iheduc.2008.03.001' ,
-                author : gen_lorem_ipsum(2,3,0),
-                publisher : gen_lorem_ipsum(2,3,0),
-                publish_date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+get_rand(1800,2015),
-
-                categoryID : Categories.find().fetch()[get_rand(0,14)]['_id'],
-                definedTermIDArray : [ TermsData[0]['_id'] ],
-                usedTermIDArray : [ TermsData[1]['_id'] ]   
+    for(var d=0;d<num_cats;d++)
+            Categories.insert({
+                category_name : gen_lorem_ipsum(1,2,0).slice(0,-1),
+                parentID : 0
             });
-    
-    for(var k=0,n=get_rand(1,10);k<n;k++){
 
-        Comments.insert({
-            userID : UsersData[get_rand(0,2)]['_id'],
-            parentID : '0', //No parent
-            postID : j,
-            text : gen_lorem_ipsum(1,30,1),
-            date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+2015
-        });
+    var num_posts = 30;
 
-        Summaries.insert({
-            userID : UsersData[get_rand(0,2)]['_id'],
-            postID : j,
-            text : gen_lorem_ipsum(10,150,1),
-            quality_rating : (Math.random()*(5)),
-            numRaters : get_rand(1,(num_raters/2))
-        });
+    for(var i=0;i<num_posts;i++){
+        var num_raters = get_rand(1,1000),
+        pop_rate = get_rand(1,num_raters);
+
+        var j = Posts.insert({
+                    userID : UsersData[get_rand(0,2)]['_id'],
+                    createdAt: moment(),
+                    modifiedAt: moment(),
+                    title : (gen_lorem_ipsum(1,15,1)),
+                    pop_rating : pop_rate,
+                    quality_rating : (Math.random()*(5)),
+                    numRaters : num_raters,
+                    doi : '10.1016/j.iheduc.2008.03.001' ,
+                    author : gen_lorem_ipsum(2,3,0),
+                    publisher : gen_lorem_ipsum(2,3,0),
+                    publish_date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+get_rand(1800,2015),
+
+                    categoryID : Categories.find().fetch()[get_rand(0,14)]['_id'],
+                    definedTermIDArray : [ TermsData[0]['_id'] ],
+                    usedTermIDArray : [ TermsData[1]['_id'] ]   
+                });
+        
+        for(var k=0,n=get_rand(1,10);k<n;k++){
+
+            Comments.insert({
+                userID : UsersData[get_rand(0,2)]['_id'],
+                parentID : '0', //No parent
+                postID : j,
+                text : gen_lorem_ipsum(1,30,1),
+                date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+2015
+            });
+
+            Summaries.insert({
+                userID : UsersData[get_rand(0,2)]['_id'],
+                postID : j,
+                text : gen_lorem_ipsum(10,150,1),
+                quality_rating : (Math.random()*(5)),
+                numRaters : get_rand(1,(num_raters/2))
+            });
+        }
     }
 }
-
 /*
     Posts.insert({
         userID : UsersData[0]['_id'],
