@@ -141,7 +141,8 @@ if(Posts.find().count() === 0){
 
     for(var i=0;i<num_posts;i++){
         var num_raters = get_rand(1,1000),
-        pop_rate = get_rand(1,num_raters);
+        pop_rate = get_rand(1,num_raters),
+        quality_rate = (Math.random()*(5));
 
         var j = Posts.insert({
                     userID : UsersData[get_rand(0,2)]['_id'],
@@ -149,7 +150,7 @@ if(Posts.find().count() === 0){
                     modifiedAt: moment(),
                     title : (gen_lorem_ipsum(1,15,1)),
                     pop_rating : pop_rate,
-                    quality_rating : (Math.random()*(5)),
+                    quality_rating : quality_rate,
                     numRaters : num_raters,
                     doi : '10.1016/j.iheduc.2008.03.001' ,
                     author : gen_lorem_ipsum(2,3,0),
@@ -160,24 +161,52 @@ if(Posts.find().count() === 0){
                     definedTermIDArray : [ TermsData[0]['_id'] ],
                     usedTermIDArray : [ TermsData[1]['_id'] ]   
                 });
+
+        for(var e=0;e<pop_rate;e++)
+            Post_influence_ratings.insert({
+                'userID': UsersData[get_rand(0,2)]['_id'],
+                'postID': j,
+                'isUpvote': true,
+            });
+
+        Post_quality_ratings.insert({
+            'userID': UsersData[get_rand(0,2)]['_id'],
+            'postID': j,
+            'rating': quality_rate,
+        });
         
         for(var k=0,n=get_rand(1,10);k<n;k++){
+            var sum_rate = (Math.random()*(5)),
+            com_rate = get_rand(0,10);
 
-            Comments.insert({
-                userID : UsersData[get_rand(0,2)]['_id'],
-                parentID : '0', //No parent
-                postID : j,
-                text : gen_lorem_ipsum(1,30,1),
-                date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+2015
+            var c_id = Comments.insert({
+                        userID : UsersData[get_rand(0,2)]['_id'],
+                        parentID : '0', //No parent
+                        postID : j,
+                        text : gen_lorem_ipsum(1,30,1),
+                        date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+2015
+                    });
+
+            var s_id = Summaries.insert({
+                        userID : UsersData[get_rand(0,2)]['_id'],
+                        postID : j,
+                        text : gen_lorem_ipsum(10,150,1),
+                        quality_rating : sum_rate,
+                        numRaters : get_rand(1,(num_raters/2))
+                    });
+
+            Summary_ratings.insert({
+                'userID': UsersData[get_rand(0,2)]['_id'],
+                'summaryID': s_id,
+                'rating': sum_rate,
             });
 
-            Summaries.insert({
-                userID : UsersData[get_rand(0,2)]['_id'],
-                postID : j,
-                text : gen_lorem_ipsum(10,150,1),
-                quality_rating : (Math.random()*(5)),
-                numRaters : get_rand(1,(num_raters/2))
-            });
+            for(var l=0;l<com_rate;l++)
+                Comment_ratings.insert({
+                    'userID': UsersData[get_rand(0,2)]['_id'],
+                    'commentID': c_id,
+                    'isUpvote': true,
+                });
         }
     }
 }

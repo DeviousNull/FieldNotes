@@ -65,7 +65,7 @@ Template.postItem.helpers({
         }).count();
 
         return (upvotes - downvotes);
-    },
+    }
 });
 
 Template.postItem.events({
