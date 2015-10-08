@@ -5,71 +5,46 @@
         }
     </style>
     <form>
+     <div class="row">
+     <div class="col-md-1" id="voteArrows" style="height: inherit">
         <div class="row">
-            <div class="col-md-10">
-                <div class="col-md-7">
-                    <span><h2 style="display: inline;">{{>titleTemplate}}</h2></span>
-                </div>
-                <div class="col-md-3">
-                    <span> <h3 style="display: inline;">Posted by: {{ findUser userID }}</h3></span>
-                </div>
-            </div>
-            <div class="col-md-2">
-                {{#if isAdmin}}
-                {{#if editMode}}
-                <button class="savePostButton btn btn-success" type="button" style="float: right">
-                    Save changes <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-                {{else}}
-                <button class="editPostButton btn btn-warning" type="button" style="float: right">
-                    Edit Post <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-                {{/if}}
-                {{/if}}
-            </div>
+          <button id="upvote-button" class="btn btn-default {{#if up_pressed}}pressed btn-info{{/if}}">
+            <span class="glyphicon glyphicon-arrow-up"></span>
+          </button>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <div class="form-inline form-group">
-                    <label for="doi">DOI: </label>
-                    {{#if editMode}}
-                    <input class="form-control" name="editableInputField" type="text" id="doi" value="{{doi}}" style="text-align: right"/>
-                    {{else}}
-                    <span class="viewSpan" style="float: right" name="doi">{{doi}}</span>
-                    {{/if}}
-                </div>
+        <span >{{influence}}</span>
+        </div>
+        <div class="row">
+
+          <button id="downvote-button" class="btn btn-default {{#if down_pressed}}pressed btn-danger{{/if}}">
+            <span class="glyphicon glyphicon-arrow-down"></span>
+          </button>
+        </div>
+    </div>
+     
+     <div class = "col-md-8">
+<div class="panel panel-primary">
+    <!-- first line -->  
+    <div class="panel-heading">
+      <div class ="row">
+          
+            <!-- Title  -->
+            <div class="col-md-6"> 
+             <span><h2 style="display: inline;">{{>titleTemplate}}</h2></span> 
             </div>
-            <!-- <div class="col-md-1"></div> -->
-            <div class="col-md-4">
-                <div class="form-inline form-group">
-                    <label for="publish_date">DATE PUBLISHED:</label>
-                    {{#if editMode}}
-                    <input class="form-control" type="text"  name="editableInputField" id="publish_date" value="{{publish_date}}" style="text-align: right"/>
-                    {{else}}
-                    <span  class="viewSpan" style='float: right' name='editableInputField'>{{publish_date}}</span>
-                    {{/if}}
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
+                <!-- Rating -->
+               <div class="col-md-6 text-center">
                 <label for="">Community Quality Rating:</label>
                 {{> starsRating class='center-block' rating=community_quality_rating}}
                 <label for="">Rate this paper's Quality: </label>
                 {{> starsRating id='user-rating' class='center-block' rating=user_quality_rating mutable=true}}
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-inline form-group">
-                    <label for="publisher">Publisher: </label>
-                    {{#if editMode}}
-                    <input class="form-control" type="text" name="editableInputField" id="publisher" value="{{ publisher }}" style="text-align: right"/>
-                    {{else}}
-                    <span class="viewSpan" name="publisher" style="float: right" value="{{publisher}}">{{publisher}}</span>
-                    {{/if}}
-                </div>
-            </div>
-            <div class="col-md-4">
+             </div>
+             </div>
+              <div class="row">
+            <!-- Author -->
+             <div class="col-md-6">
                 <div class="form-inline form-group">
                     <label for="author">Author: </label>
                     {{#if editMode}}
@@ -79,71 +54,37 @@
                     {{/if}}
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <label>Terms used in this paper: </label>
+              <!-- Published Date -->
+              <div class="col-md-6">
+                <div class="form-inline form-group">
+                    <label for="publish_date">DATE PUBLISHED:</label>
+                    {{#if editMode}}
+                    <input class="form-control" type="text"  name="editableInputField" id="publish_date" value="{{publish_date}}" style="text-align: right"/>
+                    {{else}}
+                    <span  class="viewSpan" style='float: right' name='editableInputField'>{{publish_date}}</span>
+                    {{/if}}
+                </div>
             </div>
-            <div class="col-md-4">
-                <label>Terms defined in this paper:</label>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                {{#each terms_used}}
-                    <li> {{>nameTemplate}} </li>
+            <div class="row">
+    <!-- summary -->
+        <div class="col-md-12">
+            {{#if showAllSummaries}}
+                {{#each allSummaries}}
+                    {{> summaryTemplate}}
                 {{/each}}
-            </div>
-            <div class="col-md-4">
-                {{#each terms_defined}}
-                    <li> {{>nameTemplate}} </li>
+            {{else}}
+                {{#each topSummary}}
+                    {{> summaryTemplate}}
                 {{/each}}
-            </div>
+            {{/if}}
         </div>
+    </div>
+  
 
-        <div class="row">
-            <div class="col-md-1">
-                <label>Tags:</label>
-            </div>
+     <div class="row">
+            
             <div class="col-md-4">
-                {{#each tags}}
-                {{#mathjax}}
-                <a href="{{pathFor 'tagPage'}}">{{tag}}</a>
-                {{/mathjax}}
-                {{#if loggedIn}}
-                <span id="remove_tag" tag="{{tag}}" tag_id="{{_id}}" class="glyphicon glyphicon-remove" style="color:red"></span>
-                {{/if}}
-                &nbsp;
-                {{/each}}
-                {{#if loggedIn}}
-                <a id="add_tag">new tag...</a>
-                {{/if}}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                {{#if add_tag_mode}}
-                <input class="form-control" type="text" id="tag_input" value=""/>
-                <button class="btn btn-default" id="cancel_tag" type="button">
-                Cancel
-                </button>
-                <button class="btn btn-default" id="submit_tag" type="button" style="float: right">
-                Submit Tag
-                </button>
-                {{/if}}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-1">
-                <label for="summaries">Summary: </label>
-            </div>
-            <div class="col-md-3">
                 <a class="btn btn-default" style="float: right" name="submitDefinition"
                     href="{{#if loggedIn}}{{pathFor 'submitSummary' data=submitSummaryData}}{{/if}}"
                     disabled="{{#if loggedIn}}{{else}}true{{/if}}">Submit summary</a>
@@ -158,32 +99,14 @@
                 </button>
             </div>
         </div>
-    </form>
-    <br>
-
+     <br>
     <div class="row">
         <div class="col-md-12">
-            {{#if showAllSummaries}}
-                {{#each allSummaries}}
-                    {{> summaryTemplate}}
-                {{/each}}
-            {{else}}
-                {{#each topSummary}}
-                    {{> summaryTemplate}}
-                {{/each}}
-            {{/if}}
-        </div>
-    </div>
-    <br>
-
-    <div class="row">
-        <div class="col-md-6">
             <label>Comments:</label>
         </div>
     </div>
-
     <div class="row">
-        <div class="col-md-6" id="comments">
+        <div class="col-md-12" id="comments">
             {{#each comments}}
             {{> commentItem}}
             {{/each}}
@@ -196,4 +119,103 @@
         <!-- <p>Please log in to leave a comment</p> -->
         <!-- {{/if}} -->
     </div>
+     </div>
+     </div>
+             
+    
+            <!--Metadata-->
+            <div class="col-md-3" style="background-color:lavender;">
+             <!-- Edit Post -->
+            <div>
+                {{#if isAdmin}}
+                {{#if editMode}}
+                <button class="savePostButton btn btn-success" type="button">
+                    Save changes <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                {{else}}
+                <button class="editPostButton btn btn-warning" type="button">
+                    Edit Post <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                {{/if}}
+                {{/if}}
+                </div>
+                <p>
+                 <!-- Posted by -->
+                <div>
+                    <span> <h3 style="display: inline;">Posted by: {{ findUser userID }}</h3></span>
+                </div>
+                 </p>
+                <p>
+                <!-- DOI -->
+                 <div class="form-inline form-group">
+                    <label for="doi">DOI: </label>
+                    {{#if editMode}}
+                    <input class="form-control" name="editableInputField" type="text" id="doi" value="{{doi}}" style="text-align: right"/>
+                    {{else}}
+                    <span class="viewSpan" style="float: right" name="doi">{{doi}}</span>
+                    {{/if}}
+                </div>
+                </p>
+                <P>
+            <!-- publisher -->
+                <div class="form-inline form-group" >
+                    <label for="publisher">Publisher: </label>
+                    {{#if editMode}}
+                    <input class="form-control" type="text" name="editableInputField" id="publisher" value="{{ publisher }}" style="text-align: right"/>
+                    {{else}}
+                    <span class="viewSpan" name="publisher" style="float: right" value="{{publisher}}">{{publisher}}</span>
+                    {{/if}}
+                </div>
+                <!-- Terms used -->
+                 <div>
+                <label>Terms used in this paper: </label>
+
+                {{#each terms_used}}
+                    <li> {{>nameTemplate}} </li>
+                {{/each}}
+            </div>
+            <!-- Terms defined -->
+            <div>
+                <label>Terms defined in this paper:</label>
+             {{#each terms_defined}}
+                    <li> {{>nameTemplate}} </li>
+                {{/each}}
+                </div>
+                <!-- tag -->
+            <div>
+                <label>Tags:</label>
+                {{#each tags}}
+                {{#mathjax}}
+                <a href="{{pathFor 'tagPage'}}">{{tag}}</a>
+                {{/mathjax}}
+                {{#if loggedIn}}
+                <span id="remove_tag" tag="{{tag}}" tag_id="{{_id}}" class="glyphicon glyphicon-remove" style="color:red"></span>
+                {{/if}}
+                &nbsp;
+                {{/each}}
+                {{#if loggedIn}}
+                <a id="add_tag">new tag...</a>
+                {{/if}}
+            </div>
+             <div>
+                {{#if add_tag_mode}}
+                <input class="form-control" type="text" id="tag_input" value=""/>
+                <button class="btn btn-default" id="cancel_tag" type="button">
+                Cancel
+                </button>
+                <button class="btn btn-default" id="submit_tag" type="button" style="float: right">
+                Submit Tag
+                </button>
+                {{/if}}
+            </div>        
+        </P>
+                </div>
+                 
+            </div>
+          
+         
+    </form>
+    <br>
+  
+  
 </template>
