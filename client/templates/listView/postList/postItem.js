@@ -8,6 +8,7 @@ Template.postItem.helpers({
         return user.username;
     },
     'top_summary': function() {
+        //return Summaries.find({postID: this._id}, {sort: {quality_rating: -1}, limit: 1});
         return Summaries.findOne({postID: this._id});
     },
     'community_quality_rating': function() {

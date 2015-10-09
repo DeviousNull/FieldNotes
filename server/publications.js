@@ -126,12 +126,20 @@ Meteor.publish('retrieveLayout', function() {
 // All documents needed to render a postsList template
 Meteor.publishComposite('retrievePostsList', { // All Posts
     'find': function() {
-        return Posts.find({});
+        //return Posts.find({});
+        
+        /* temporary sort/pagination implementation ***********************************************/
+            /*if(all)
+                return Posts.find({}, {sort:{pop_rating: -1, quality_rating: -1}});
+            */
+            return Posts.find({}, {sort:{pop_rating: -1, quality_rating: -1}});//, limit :10});
+        /******************************************************************************************/
     },
     'children': [
         { // Post Top Summary
             'find': function(post) {
-                return Summaries.find({'postID': post._id}, {'sort': {'rating': -1}, 'limit':1 });
+                //return Summaries.find({'postID': post._id});
+                return Summaries.find({'postID': post._id}, {'sort': {'quality_rating': -1}, 'limit':1 });
             }
         },
         { // Poster Username
@@ -376,6 +384,11 @@ Meteor.publishComposite('retrieveSummaryList', { // All Posts
         { // Post Summaries
             'find': function(post) {
                 return Summaries.find({'postID': post._id});
+
+                /* temporary sort/pagination implementation ***********************************************/
+                //return Summaries.find({}, {sort:{quality_rating: -1}, limit :10});
+                /******************************************************************************************/
+
             }, // Post Summary Quality Ratings (Public)
             'children': [
                 { 

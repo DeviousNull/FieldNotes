@@ -1,9 +1,23 @@
 <template name="postsList" >
 <div class="nav nav-tabs">
-<li role="presentation" class="active"><a href="{{pathFor 'summaryList'}}">Summaries</a></li>
-<li role="presentation" class="active"><a href="{{pathFor 'postsList'}}">Papers</a></li>
+<li role="presentation" class="active"><a href="{{pathFor 'summaryList'}}">Papers</a></li>
+<li role="presentation" class="active"><a href="{{pathFor 'postsList'}}">Summaries</a></li>
     {{#each posts}}
         {{> postItem}}
     {{/each}}
     </div>
+
+<div align="center">
+	<button id="more-button" class="btn btn-info">MORE</button>
+	<!--
+      <ul class="pagination">
+		  <li><a href="#">1</a></li>
+		  <li><a href="#">2</a></li>
+		  <li><a href="#">3</a></li>
+		  <li><a href="#">4</a></li>
+		  <li><a href="#">5</a></li>
+	</ul>
+	-->
+</div>
+
 </template>
