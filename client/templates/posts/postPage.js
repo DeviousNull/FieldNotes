@@ -102,7 +102,7 @@ Template.postPage.events({
 
         Template.instance().addTagMode.set(false);
     },
-      'click #upvote-button': function(e) {
+      'click #uvote-button': function(e) {
         var rating = Post_influence_ratings.findOne({
             'userID': Meteor.user()._id,
             'postID': this._id,
@@ -127,7 +127,7 @@ Template.postPage.events({
         }
     },
 
-    'click #downvote-button': function(e) {
+    'click #dvote-button': function(e) {
         var rating = Post_influence_ratings.findOne({
             'userID': Meteor.user()._id,
             'postID': this._id,

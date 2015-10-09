@@ -44,24 +44,34 @@
              </div>
               <div class="row">
             <!-- Author -->
-             <div class="col-md-6">
-                <div class="form-inline form-group">
-                    <label for="author">Author: </label>
-                    {{#if editMode}}
-                    <input class="form-control" type="text" name="editableInputField" id="author" value="{{author}}" style="text-align: right"/>
+             <div class="col-md-6 text-center">
+              <label for="author">Author: </label>
+                    
+                    </div>
+                    <div class ="col-md-6 text-center">
+                    <label for="publish_date">DATE PUBLISHED:</label>
+               
+            </div>
+            </div>
+            <div class="row">
+              <!-- Published Date -->
+              <div class="col-md-6 text-center">
+
+              <div class="form-inline form-group">
+                   {{#if editMode}}
+                    <input class="form-control" type="text" name="editableInputField" id="author" value="{{author}}" />
                     {{else}}
-                    <span class="viewSpan" name="author" style="float: right">{{author}}</span>
+                    <span class="viewSpan" name="author" >{{author}}</span>
                     {{/if}}
                 </div>
-            </div>
-              <!-- Published Date -->
-              <div class="col-md-6">
+                </div>
+                <div class ="col-md-6 text-center">
                 <div class="form-inline form-group">
-                    <label for="publish_date">DATE PUBLISHED:</label>
+                    
                     {{#if editMode}}
-                    <input class="form-control" type="text"  name="editableInputField" id="publish_date" value="{{publish_date}}" style="text-align: right"/>
+                    <input class="form-control" type="text"  name="editableInputField" id="publish_date" value="{{publish_date}}" style="text-align: center"/>
                     {{else}}
-                    <span  class="viewSpan" style='float: right' name='editableInputField'>{{publish_date}}</span>
+                    <span  class="viewSpan" style='align:center' name='editableInputField'>{{publish_date}}</span>
                     {{/if}}
                 </div>
             </div>
