@@ -274,6 +274,5 @@ Template.postPage.helpers({
         }).count();
 
         return (upvotes - downvotes);
-    },
-
+    }
 });
