@@ -191,8 +191,7 @@ if(Posts.find().count() === 0){
                         userID : UsersData[get_rand(0,2)]['_id'],
                         postID : j,
                         text : gen_lorem_ipsum(10,150,1),
-                        quality_rating : sum_rate,
-                        numRaters : get_rand(1,(num_raters/2))
+                        isOfficialAbstract: false
                     });
 
             Summary_ratings.insert({

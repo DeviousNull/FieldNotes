@@ -150,6 +150,10 @@ var accessControlList = {
     },
     'Summaries' : {
         'insert' : aclUserIsAuthed,
+        'update' : aclANY([
+            aclUserIsAdmin,
+            aclUserIsOwner('userID'),
+        ]),
         'remove' : aclUserIsAdmin
     },
     'Terms' : {
