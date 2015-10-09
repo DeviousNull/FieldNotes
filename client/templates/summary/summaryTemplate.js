@@ -21,6 +21,12 @@ Template.summaryTemplate.events({
             Summary_ratings.remove(user_rating._id);
         }
     },
+
+    'click #delete-summary': function(e) {
+        if (confirm("Are you sure you want to delete this summary?")) {
+            Meteor.call('delete-summary', this._id);
+        }
+    },
 });
 
 Template.summaryTemplate.helpers({
@@ -64,5 +70,14 @@ Template.summaryTemplate.helpers({
 
     'is_official_abstract': function() {
         return Template.instance().data.isOfficialAbstract;
+    },
+
+    'user_can_modify': function() {
+        if (Meteor.user()) {
+            return (Roles.userIsInRole(Meteor.user()._id,'admin')
+                    || Template.instance().data.userID === Meteor.user()._id);
+        } else {
+            return false;
+        }
     },
 });

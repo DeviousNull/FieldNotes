@@ -21,13 +21,6 @@ Template.postPage.events({
         Template.instance().editMode.set(true);
     },
 
-    //Click event for deleting a summary
-    'click .deleteSummary': function(e) {
-        if(confirm("Are you sure you want to delete this summary?")){
-            Summaries.remove(this._id);
-        }
-    },
-
     //Click event for saving changes to a post
     'click .savePostButton': function(e) {
         // Disable edit mode
