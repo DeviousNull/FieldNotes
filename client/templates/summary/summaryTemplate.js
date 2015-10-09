@@ -1,3 +1,8 @@
+Template.summaryTemplate.onCreated(function() {
+    // flag for toggling edit mode
+    this.editMode = new ReactiveVar(false);
+});
+
 Template.summaryTemplate.events({
     'click #summary-user-rating': function(e) {
         var user_rating = Summary_ratings.findOne({
@@ -9,17 +14,39 @@ Template.summaryTemplate.events({
             Summary_ratings.insert({
                 'userID': Meteor.userId(),
                 'summaryID': Template.instance().data._id,
-                'rating': Template.instance().$('#summary-user-rating').data('userrating'),
+                'rating': Template.instance().$('div#summary-user-rating').data('userrating'),
             });
-        } else if (user_rating.rating != Template.instance().$('#summary-user-rating').data('userrating')) {
+        } else if (user_rating.rating != Template.instance().$('div#summary-user-rating').data('userrating')) {
             Summary_ratings.update(user_rating._id, {
                 '$set': {
-                    'rating': Template.instance().$('#summary-user-rating').data('userrating'),
+                    'rating': Template.instance().$('div#summary-user-rating').data('userrating'),
                 }
             });
         } else {
             Summary_ratings.remove(user_rating._id);
         }
+    },
+
+    'click #delete-summary': function(e) {
+        if (confirm("Are you sure you want to delete this summary?")) {
+            Meteor.call('delete-summary', this._id);
+        }
+    },
+
+    'click #edit-summary': function(e) {
+        Template.instance().editMode.set(true);
+    },
+
+    'click #save-summary': function(e) {
+        Template.instance().editMode.set(false);
+
+        var updatedSummary = {
+            $set : {
+                'text': Template.instance().$('textarea#summary-text').val(),
+            }
+        };
+
+        Summaries.update(this._id, updatedSummary);
     },
 });
 
@@ -65,4 +92,25 @@ Template.summaryTemplate.helpers({
     'is_official_abstract': function() {
         return Template.instance().data.isOfficialAbstract;
     },
+
+    'user_can_delete': function() {
+        if (Meteor.user()) {
+            return (Roles.userIsInRole(Meteor.user()._id,'admin')
+                    || Template.instance().data.userID === Meteor.user()._id);
+        } else {
+            return false;
+        }
+    },
+
+    'user_can_modify': function() {
+        if (Meteor.user()) {
+            return Template.instance().data.userID === Meteor.user()._id;
+        } else {
+            return false;
+        }
+    },
+
+    'edit_mode': function() {
+        return Template.instance().editMode.get();
+    }
 });

@@ -6,15 +6,30 @@
             Rate this Summary:{{> starsRating id="summary-user-rating" rating=summary_user_rating mutable=true}}
             <div class="well well-lg" style="{{#if is_official_abstract}}background: #aaf{{/if}}">
                 <div>
-                    {{#if isAdmin}}
-                    <button class="btn btn-sm btn-danger deleteSummary" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    {{#if user_can_delete}}
+                    <button id="delete-summary" class="btn btn-sm btn-danger" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    {{/if}}
+                    {{#if user_can_modify}}
+                    {{#if edit_mode}}
+                    <button id="save-summary" class="btn btn-success" type="button">
+                        Save<span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    {{else}}
+                    <button id="edit-summary" class="btn btn-warning" type="button">
+                        Edit<span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    {{/if}}
                     {{/if}}
                 </div>
+                {{#if edit_mode}}
+                <textarea id="summary-text">{{text}}</textarea>
+                {{else}}
                 {{#mathjax}}
                     <span>
                         {{#markdown}}{{{markdownedText}}}{{/markdown}}
                     </span>
                 {{/mathjax}}
+                {{/if}}
             </div>
         </div>
     </div>
