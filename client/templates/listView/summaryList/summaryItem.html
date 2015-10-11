@@ -21,7 +21,11 @@
         <div class="body">
           <div class="row text-center">
             <div class="col-md-12">
-              {{text}}
+              {{#mathjax}}
+              <span>
+                {{#markdown}}{{{markdownedText text}}}{{/markdown}}&nbsp;
+              </span>
+              {{/mathjax}}
             </div>
               <div class="row"><p>&nbsp;</p></div>
 

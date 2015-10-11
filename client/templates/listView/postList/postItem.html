@@ -12,7 +12,7 @@
         <div class="row"></div>
           {{#mathjax}}
             <span>
-              {{top_summary.text}}&nbsp;
+              {{#markdown}}{{{markdownedText top_summary.text}}}{{/markdown}}&nbsp;
             </span>
           {{/mathjax}}
           <div class="row text-left">
