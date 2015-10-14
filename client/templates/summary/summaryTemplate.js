@@ -53,7 +53,9 @@ Template.summaryTemplate.events({
 Template.summaryTemplate.helpers({
     'markdownedText': function() {
         var converter = new Showdown.converter();
-        return converter.makeHtml(this.text);
+
+        //return text with reinstated underscores in place of <em> & </em>
+        return converter.makeHtml(this.text).replace(/<em>|<\/em>/g,"_");
     },
 
     'summary_quality_rating': function() {

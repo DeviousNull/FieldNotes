@@ -7,9 +7,18 @@ Template.postItem.helpers({
         }
         return user.username;
     },
+
+    'markdownedText': function(text) {
+        var converter = new Showdown.converter();
+
+        //return text with reinstated underscores in place of <em> & </em>
+        return converter.makeHtml(text).replace(/<em>|<\/em>/g,"_");
+    },
+
     'top_summary': function() {
         return Summaries.findOne({postID: this._id});
     },
+
     'community_quality_rating': function() {
         var all_ratings = Post_quality_ratings.find({
             'postID': Template.instance().data._id,

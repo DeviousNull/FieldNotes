@@ -162,6 +162,8 @@ if(Posts.find().count() === 0){
                     usedTermIDArray : [ TermsData[1]['_id'] ]   
                 });
 
+        var html=(i%5===0) ? '<strong>BOLD</strong> ' : '';
+
         for(var e=0;e<pop_rate;e++)
             Post_influence_ratings.insert({
                 'userID': UsersData[get_rand(0,2)]['_id'],
@@ -190,7 +192,7 @@ if(Posts.find().count() === 0){
             var s_id = Summaries.insert({
                         userID : UsersData[get_rand(0,2)]['_id'],
                         postID : j,
-                        text : gen_lorem_ipsum(10,150,1),
+                        text : html+gen_lorem_ipsum(10,150,1),
                         isOfficialAbstract: false
                     });
 
