@@ -159,15 +159,10 @@ if(Posts.find().count() === 0){
 
                     categoryID : Categories.find().fetch()[get_rand(0,14)]['_id'],
                     definedTermIDArray : [ TermsData[0]['_id'] ],
-                    usedTermIDArray : [ TermsData[1]['_id'] ]   
+                    usedTermIDArray : [ TermsData[1]['_id'] ],
+                    upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
+                    downvoteUserIDArray : [],
                 });
-
-        for(var e=0;e<pop_rate;e++)
-            Post_influence_ratings.insert({
-                'userID': UsersData[get_rand(0,2)]['_id'],
-                'postID': j,
-                'isUpvote': true,
-            });
 
         Post_quality_ratings.insert({
             'userID': UsersData[get_rand(0,2)]['_id'],
