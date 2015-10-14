@@ -185,7 +185,7 @@ if(Posts.find().count() === 0){
             var s_id = Summaries.insert({
                         userID : UsersData[get_rand(0,2)]['_id'],
                         postID : j,
-                        text : gen_lorem_ipsum(10,150,1),
+                        text : html+gen_lorem_ipsum(10,150,1),
                         isOfficialAbstract: false
                     });
 

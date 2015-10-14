@@ -13,6 +13,14 @@ Template.summaryItem.helpers({
 
         return post.title;
     },
+
+    'markdownedText': function(text) {
+        var converter = new Showdown.converter();
+
+        //return text with reinstated underscores in place of <em> & </em>
+        return converter.makeHtml(text).replace(/<em>|<\/em>/g,"_");
+    },
+
     //Return the username from a user id
     'userName': function(userID){
         var user = Meteor.users.findOne(userID)
