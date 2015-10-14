@@ -229,7 +229,11 @@ Template.postPage.helpers({
     'add_tag_mode': function() {
         return Template.instance().addTagMode.get();
     },
-      'up_pressed': function() {
+    'up_pressed': function() {
+        if (!Meteor.user()) {
+            return false
+        }
+
         var rating = Post_influence_ratings.findOne({
             'userID': Meteor.user()._id,
             'postID': this._id,
@@ -243,6 +247,10 @@ Template.postPage.helpers({
     },
 
     'down_pressed': function() {
+        if (!Meteor.user()) {
+            return false
+        }
+
         var rating = Post_influence_ratings.findOne({
             'userID': Meteor.user()._id,
             'postID': this._id,
