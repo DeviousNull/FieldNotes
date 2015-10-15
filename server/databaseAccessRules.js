@@ -123,6 +123,16 @@ function valIsIntegerInRange(_min, _max) {
     }
 }
 
+// Condition function
+// Returns true IFF the specified value is the userID of any user.
+function conIsAnyUserID(_val) {
+    if (!Match.test(_val, String)) {
+        return false;
+    }
+
+    return (!!Meteor.users.findOne(_val));
+}
+
 /************************
 * Database Access Rules *
 *************************/
@@ -178,14 +188,6 @@ var accessControlList = {
             aclUserIsOwner('userID'),
         ]),
     },
-    'Post_influence_ratings' : {
-        'insert' : aclUserIsAuthed,
-        'update' : aclUserIsOwner('userID'),
-        'remove' : aclANY([
-            aclUserIsAdmin,
-            aclUserIsOwner('userID'),
-        ]),
-    },
     'Summary_ratings' : {
         'insert' : aclUserIsAuthed,
         'update' : aclUserIsOwner('userID'),
@@ -231,7 +233,7 @@ var validationList = {
     'Posts' : {
         'key': [],
         'format': {
-            'userID':             valIsCurrentUserID,
+            'userID':             valMatches(Match.Where(conIsAnyUserID)),
             'createdAt':          valMatches(Match.Any), // Overwritten in DB hook
             'modifiedAt':         valMatches(Match.Any), // Overwritten in DB hook
             'title':              valMatches(String),
@@ -245,12 +247,13 @@ var validationList = {
             'categoryID':         valIsForeignKey(Categories),
             'definedTermIDArray': valIsForeignKeyArray(Terms),
             'usedTermIDArray':    valIsForeignKeyArray(Terms),
+            'upvoteUserIDArray':  valMatches([Match.Where(conIsAnyUserID)]),
+            'downvoteUserIDArray':valMatches([Match.Where(conIsAnyUserID)]),
         },
         'references': [
             {'postID': Comments},
             {'postID': Summaries},
             {'postID': Post_quality_ratings},
-            {'postID': Post_influence_ratings},
         ]
     },
     'Comments' : {
@@ -345,16 +348,6 @@ var validationList = {
         'references': [
         ]
     },
-    'Post_influence_ratings' : {
-        'key': [ 'userID', 'postID' ],
-        'format': {
-            'userID':    valIsCurrentUserID,
-            'postID':    valIsForeignKey(Posts),
-            'isUpvote':  valMatches(Boolean),
-        },
-        'references': [
-        ]
-    },
     'Summary_ratings' : {
         'key': [ 'userID', 'summaryID' ],
         'format': {
@@ -445,7 +438,7 @@ function verifyData(_collection, _dbname, _userid, _doc) {
             for (var property in validationList[_dbname]['format']) { // verify that all expected fields exist and have valid contents
                 if (property in _doc) {
                     if (!validationList[_dbname]['format'][property](_userid, _doc, property)) {
-                        console.log("WARN: databaseAccessRules.js: " + _dbname + " request denied - Verification function returned false. (userid: " + _userid + ", doc: " + JSON.stringify(_doc) + ")");
+                        console.log("WARN: databaseAccessRules.js: " + _dbname + " request denied - Verification function returned false. (userid: " + _userid + ", doc: " + JSON.stringify(_doc) + ", prop: " + property + ")");
                         return false;
                     }
                 } else {
@@ -485,9 +478,9 @@ function verifyData(_collection, _dbname, _userid, _doc) {
 
 // Applies a specified modifier to a specified document. Returns true if successful, false if the modifier is unsupported.
 function applyModification(_doc, _modifier) {
-    //NOTE(James): If we ever use a modifier other than $set, this is going to need a lot of work. Until then, forbid everything else.
+    var supported_properties = [ "$set", "$pull", "$addToSet" ];
     for (var property in _modifier) {
-        if (property !== "$set") {
+        if (supported_properties.indexOf(property) === -1) {
             return false;
         }
     }
@@ -495,6 +488,22 @@ function applyModification(_doc, _modifier) {
     if (_modifier.$set) {
         for (var property in _modifier.$set) {
             _doc[property] = _modifier.$set[property];
+        }
+    }
+
+    if (_modifier.$pull) {
+        for (var property in _modifier.$pull) {
+            while (_doc[property].indexOf(_modifier.$pull[property]) >= 0) {
+                _doc[property].splice(_doc[property].indexOf(_modifier.$pull[property]), 1);
+            }
+        }
+    }
+
+    if (_modifier.$addToSet) {
+        for (var property in _modifier.$addToSet) {
+            if (_doc[property].indexOf(_modifier.$addToSet[property]) < 0) {
+                _doc[property].push(_modifier.$addToSet[property]);
+            }
         }
     }
 
@@ -533,7 +542,7 @@ function denyThunkFactory(collection, name) {
         update : function(userId, doc, fieldNames, modifier) {
             var success = applyModification(doc, modifier);
             if (!success) {
-                return false;
+                return true;
             }
             return !verifyData(collection, name, userId, doc);
         },
@@ -576,9 +585,6 @@ Term_label_values.deny(denyThunkFactory(Term_label_values, 'Term_label_values'))
 
 Post_quality_ratings.allow(allowThunkFactory('Post_quality_ratings'));
 Post_quality_ratings.deny(denyThunkFactory(Post_quality_ratings, 'Post_quality_ratings'));
-
-Post_influence_ratings.allow(allowThunkFactory('Post_influence_ratings'));
-Post_influence_ratings.deny(denyThunkFactory(Post_influence_ratings, 'Post_influence_ratings'));
 
 Summary_ratings.allow(allowThunkFactory('Summary_ratings'));
 Summary_ratings.deny(denyThunkFactory(Summary_ratings, 'Summary_ratings'));

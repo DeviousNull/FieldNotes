@@ -152,16 +152,6 @@ Meteor.publishComposite('retrievePostsList', { // All Posts
                 return Post_quality_ratings.find({'postID': post._id}, {'fields': {userID :0}});
             }
         },
-        { // Post Influence (Public)
-            'find': function(post) {
-                return Post_influence_ratings.find({'postID': post._id}, {'fields': {userID :0}});
-            }
-        },
-        { // Post Influence (Private)
-            'find': function(post) {
-                return Post_influence_ratings.find({'postID': post._id, 'userID': this.userId});
-            }
-        }
     ]
 });
 
@@ -279,16 +269,6 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
                             return Post_quality_ratings.find({'postID': post._id}, {'fields': {userID :0}});
                         }
                     },
-                    { // Category Post Comment Influence (Public)
-                        'find': function(post, category) {
-                            return Post_influence_ratings.find({'postID': post._id}, {'fields': {userID :0}});
-                        }
-                    },
-                    { // Category Post Comment Influence (Private)
-                        'find': function(post, category) {
-                            return Post_influence_ratings.find({'postID': post._id, 'userID': this.userId});
-                        }
-                    }
                 ]
             }
         ]
