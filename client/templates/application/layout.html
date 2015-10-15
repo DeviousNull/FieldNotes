@@ -33,7 +33,7 @@
     <li><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
     {{/each}}
 
-  </ul>  </li> </div>
+   </ul>  </li> </div>
     
             <div class="col-sm-2"><li class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -58,7 +58,8 @@
                     <i class="glyphicon glyphicon-chevron-left"></i>
                 </button>
              
-                {{#each categories}}
+             
+            {{#each categories}}
                  
                     <li role="presentation"><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
                 
@@ -70,6 +71,7 @@
                    {{#if isAdmin}}
                 <li role="presentation" class="text-right" ><a  href="{{pathFor 'newCategory'}}"><span class="glyphicon glyphicon-plus"></span></a></li>
                 {{/if}}
+              
  
 
 

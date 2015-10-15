@@ -1,0 +1,61 @@
+<template name="categories">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" placeholder="Search for a category" aria-describedby="searchbuttonaddon">
+                        <span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <p></p>
+                    {{#if isAdmin}}
+                    <a class="btn btn-primary" href="{{pathFor 'newCategory'}}">Create a new Category</a>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <p></p>
+                    {{#if isAdmin}}
+                    <button class="editCategoriesButton btn btn-warning" type="button" style="float: right">
+                        Remove Category
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                  
+                </div>
+                <div class="row">
+                    <h4>List of available categories:</h4>
+                </div>
+                <div class="row">
+                    {{#each categories}}
+                        <div>
+                            <a href="{{pathFor 'categoryPage'}}">{{category_name}}</a>
+                             <div name="editableInputField" hidden>
+                                <input class="form-control" id="name" disabled value="{{ category_name }}"/>
+                                <button class="btn btn-sm btn-danger deleteCategory" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
+                                <hr>
+                            </div>
+                           
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
