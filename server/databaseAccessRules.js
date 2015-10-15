@@ -154,6 +154,11 @@ var accessControlList = {
         'update' : aclUserIsAdmin,
         'remove' : aclUserIsAdmin
     },
+    'Categories' : {
+       'insert' : aclUserIsAdmin,
+       'update' : aclUserIsAdmin,
+       'remove' : aclUserIsAdmin
+   },
     'Adminlabels' : {
         'insert' : aclUserIsAuthed,
         'remove' : aclUserIsAdmin,
@@ -268,6 +273,15 @@ var validationList = {
         'references': [
             {'parentID':  Comments},
             {'commentID': Comment_ratings},
+        ]
+    },
+    'Categories':{
+        'key': [],
+        'format': {
+            'category_name': valMatches(String),
+        },
+        'references': [
+            {'categoryID': Adminlabels},
         ]
     },
     'Dictionaries' : {
