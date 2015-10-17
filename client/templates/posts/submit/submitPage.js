@@ -1,7 +1,10 @@
 Template.submitPage.onCreated(function() {
     this.previewData = new ReactiveVar;
     this.selectedCategory = new ReactiveVar;
+   
+
 });
+
 
 Template.submitPage.events({
     'click .submitButton': function(e) {
@@ -70,9 +73,11 @@ Template.submitPage.events({
         Template.instance().previewData.set(converter.makeHtml(text));
     },
 
+
 });
 
 Template.submitPage.helpers({
+    
     'submitPageCategoryOptions': function() {
         return Categories.find({parentID: 0});
     },
@@ -93,7 +98,79 @@ Template.submitPage.helpers({
             return 'Select a Category';
         }
     },
+  
 });
+Template.addTerm.onCreated(function() {
+    this.selectedTerm = new ReactiveVar;
+
+});
+Template.addTerm.helpers({
+    'addTermTermOptions': function() {
+        return Term.find({parentID: 0});
+    },
+    'getLabels': function() {
+        return Adminlabels.find({'dictionaryID': this._id});
+    },
+    'terms': function() {
+        //Return the terms
+        return Terms.find();
+    },
+     'selectedTerm': function() {
+        var cat = Template.instance().selectedTerm.get();
+        if (cat) {
+            return cat.Term_name;
+        } else {
+            return 'Select a Term';
+        }
+    },
+});
+
+Template.addTerm.events({
+
+    // Click event for submit button
+    'click button[name=addButton]': function(e) {
+        // Insert new term
+        var term = {
+            term_name: Template.instance().$('[name=term_name]').val(),
+            dictionaryID: this._id
+        };
+        term._id = Terms.insert(term);
+       
+
+        // Insert new definition
+        Definitions.insert({
+            termID: term._id,
+            userID: Meteor.user()._id,
+            text: Template.instance().$('[name=definition]').val(),
+            quality_rating : 0,
+            numRaters : 0,
+        });
+
+        // For every element with the name labelValue, insert new label value
+        Template.instance().$('[name="labelValue"]').each(function() {
+            Term_label_values.insert({
+                termID: term._id,
+                adminlabelsID: $(this).attr("label_id"),
+                value: $(this).val(),
+            });
+        });
+        var post = {
+             termD: Template.instance().selectedTerm.get()._id,
+        }
+        post._id = Posts.insert(post);
+
+         // Route to the dictionary page and send it the data
+        Router.go('dictionaryPage', this);
+
+    },
+    'click .dropdown-menu li a': function(e) {
+        Template.instance().selectedTerm.set(this);
+        },
+       
+});
+
+
+
 
 //Returns the data for the autocomplete search function
 Template.search.helpers({
