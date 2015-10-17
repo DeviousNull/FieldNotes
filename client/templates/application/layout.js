@@ -9,5 +9,18 @@ Template.layout.helpers({
 
 });
 
+Template.layout.events({
+	'keypress #siteTitle': function(e){
+        if(e.which === 13) {
+    		$('#siteTitle').attr('contenteditable', 'false');
+  			var newTitle = $('#siteTitle').html();
+  			alert("New Title: "+newTitle);
+  			/*
+			Update Site Title with newTitle whereever stored
+  			*/
+        }
+    },
+});
+
 
 

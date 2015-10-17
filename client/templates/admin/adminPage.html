@@ -1,18 +1,25 @@
 <template name="adminPage">
-	<ul style="list-style-type:disc">
-	  <li><a class="btn btn-default" href="{{pathFor 'submitPost'}}">Ban User</a></li>
-	  <li><a class="btn btn-default" href="{{pathFor 'newCategory'}}">Create New Category</a></li>
-	  <li><a class="btn btn-default" href="{{pathFor 'submitPost'}}">Edit Branding</a></li>
-	</ul>
+
+	<ul id="admin-list">
+        <li><a>Manage Users &#9662;</a>
+        	<ul class="dropdown">
+                <li><a href="{{pathFor 'banUser'}}">Ban User</a></li>
+                <li><a href="#">Reset Password</a></li>
+            </ul>
+        </li>
+
+        <li><a> Manage Categories &#9662;</a>
+        	<ul class="dropdown">
+                <li><a href="{{pathFor 'newCategory'}}">New Category</a></li>             
+            </ul>
+        </li>
+        
+        <li><a>Manage Site Branding &#9662;</a>
+            <ul class="dropdown">
+                <li><a id="change-title-link" href="#">Change Title</a></li>
+                <li><a href="#">Change Logo</a></li>
+            </ul>
+        </li>
+    </ul>
 
 </template>
-
-<!--
-
-A page is needed for general administration. It should include support for:
-	-Banning Users
-	-Creating new categories
-	-Change site name/branding
-	-Resetting user passwords
-
--->
