@@ -200,7 +200,7 @@ var accessControlList = {
     },
     'Post_tags' : {
         'insert' : aclUserIsAuthed,
-        'remove' : aclUserIsAuthed,
+        'remove' : aclUserIsAdmin,
     },
 };
 
