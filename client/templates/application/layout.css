@@ -34,6 +34,10 @@ section {
 .content{
     width:1000px;
 }
+.content ul li a{
+  white-space: nowrap;
+}
+
 .jumbotron{
     width:100%;
     overflow-x:auto;

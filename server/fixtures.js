@@ -163,6 +163,8 @@ if(Posts.find().count() === 0){
                     upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
                     downvoteUserIDArray : [],
                 });
+        
+        var html=(i%5===0) ? '<strong>BOLD</strong> ' : '';
 
         Post_quality_ratings.insert({
             'userID': UsersData[get_rand(0,2)]['_id'],
