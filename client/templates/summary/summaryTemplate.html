@@ -1,9 +1,21 @@
 <template name="summaryTemplate">
     <div class="row">
         <div class="col-md-8">
-            <div></div>
-            Community Rating:{{> starsRating rating=summary_quality_rating}}
-            Rate this Summary:{{> starsRating id="summary-user-rating" rating=summary_user_rating mutable=true}}
+            <div class="col-md-1" id="voteArrows">
+                <div class="row">
+                    <button type="button" id="upvote-button" class="btn btn-default {{#if up_pressed}}pressed btn-info{{/if}}" style="text-align: center">
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    </button>
+                </div>
+                <div class="row">
+                    <span>{{influence}}</span>
+                </div>
+                <div class="row">
+                    <button type="button" id="downvote-button" class="btn btn-default {{#if down_pressed}}pressed btn-danger{{/if}}">
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    </button>
+                </div>
+            </div>
             <div class="well well-lg" style="{{#if is_official_abstract}}background: #aaf{{/if}}">
                 <div>
                     {{#if user_can_delete}}

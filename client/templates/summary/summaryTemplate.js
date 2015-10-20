@@ -4,27 +4,34 @@ Template.summaryTemplate.onCreated(function() {
 });
 
 Template.summaryTemplate.events({
-    'click #summary-user-rating': function(e) {
-        var user_rating = Summary_ratings.findOne({
-            'userID': Meteor.userId(),
-            'summaryID': Template.instance().data._id,
-        });
-
-        if (!user_rating) {
-            Summary_ratings.insert({
-                'userID': Meteor.userId(),
-                'summaryID': Template.instance().data._id,
-                'rating': Template.instance().$('div#summary-user-rating').data('userrating'),
-            });
-        } else if (user_rating.rating != Template.instance().$('div#summary-user-rating').data('userrating')) {
-            Summary_ratings.update(user_rating._id, {
-                '$set': {
-                    'rating': Template.instance().$('div#summary-user-rating').data('userrating'),
-                }
-            });
-        } else {
-            Summary_ratings.remove(user_rating._id);
+    'click #upvote-button': function(e) {
+        if (!Meteor.user()) {
+            return;
         }
+
+        Summaries.update(this._id, {
+            '$pull': {
+                'downvoteUserIDArray': Meteor.user()._id,
+            },
+            '$addToSet': {
+                'upvoteUserIDArray': Meteor.user()._id,
+            }
+        });
+    },
+
+    'click #downvote-button': function(e) {
+        if (!Meteor.user()) {
+            return;
+        }
+
+        Summaries.update(this._id, {
+            '$pull': {
+                'upvoteUserIDArray': Meteor.user()._id,
+            },
+            '$addToSet': {
+                'downvoteUserIDArray': Meteor.user()._id,
+            }
+        });
     },
 
     'click #delete-summary': function(e) {
@@ -58,37 +65,24 @@ Template.summaryTemplate.helpers({
         return converter.makeHtml(this.text).replace(/<em>|<\/em>/g,"_");
     },
 
-    'summary_quality_rating': function() {
-        var all_ratings = Summary_ratings.find({
-            'summaryID': Template.instance().data._id,
-        });
-
-        if (all_ratings.count() == 0) {
-            return -1;
+    'up_pressed': function() {
+        if (!Meteor.user()) {
+            return false
         }
 
-        var total = 0;
-        all_ratings.forEach(function(current) {
-            total += current.rating;
-        });
-
-        return (total / all_ratings.count());
+        return (this.upvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
     },
 
-    'summary_user_rating': function() {
-        if (!Meteor.userId()) {
-            return -1;
-        } else {
-            var user_rating = Summary_ratings.findOne({
-                'userID': Meteor.userId(),
-                'summaryID': Template.instance().data._id,
-            });
-            if (user_rating) {
-                return user_rating.rating;
-            } else {
-                return -1;
-            }
+    'down_pressed': function() {
+        if (!Meteor.user()) {
+            return false
         }
+
+        return (this.downvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+    },
+
+    'influence': function() {
+        return (this.upvoteUserIDArray.length - this.downvoteUserIDArray.length);
     },
 
     'is_official_abstract': function() {
