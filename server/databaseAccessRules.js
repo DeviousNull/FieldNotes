@@ -165,10 +165,7 @@ var accessControlList = {
     },
     'Summaries' : {
         'insert' : aclUserIsAuthed,
-        'update' : aclANY([
-            aclUserIsAdmin,
-            aclUserIsOwner('userID'),
-        ]),
+        'update' : aclUserIsAuthed,
         'remove' : aclUserIsAdmin
     },
     'Terms' : {
@@ -186,14 +183,6 @@ var accessControlList = {
         'remove' : aclUserIsAdmin,
     },
     'Post_quality_ratings' : {
-        'insert' : aclUserIsAuthed,
-        'update' : aclUserIsOwner('userID'),
-        'remove' : aclANY([
-            aclUserIsAdmin,
-            aclUserIsOwner('userID'),
-        ]),
-    },
-    'Summary_ratings' : {
         'insert' : aclUserIsAuthed,
         'update' : aclUserIsOwner('userID'),
         'remove' : aclANY([
@@ -308,13 +297,14 @@ var validationList = {
     'Summaries' : {
         'key': [],
         'format': {
-            'userID':             valIsCurrentUserID,
+            'userID':             valMatches(Match.Where(conIsAnyUserID)),
             'postID':             valIsForeignKey(Posts),
             'text':               valMatches(String),
             'isOfficialAbstract': valMatches(Boolean),
+            'upvoteUserIDArray':  valMatches([Match.Where(conIsAnyUserID)]),
+            'downvoteUserIDArray':valMatches([Match.Where(conIsAnyUserID)]),
         },
         'references': [
-            {'summaryID': Summary_ratings},
         ]
     },
     'Terms' : {
@@ -358,16 +348,6 @@ var validationList = {
             'userID':   valIsCurrentUserID,
             'postID':   valIsForeignKey(Posts),
             'rating':   valIsNumberInRange(1, 5),
-        },
-        'references': [
-        ]
-    },
-    'Summary_ratings' : {
-        'key': [ 'userID', 'summaryID' ],
-        'format': {
-            'userID':    valIsCurrentUserID,
-            'summaryID': valIsForeignKey(Summaries),
-            'rating':    valIsNumberInRange(0, 5),
         },
         'references': [
         ]
@@ -599,9 +579,6 @@ Term_label_values.deny(denyThunkFactory(Term_label_values, 'Term_label_values'))
 
 Post_quality_ratings.allow(allowThunkFactory('Post_quality_ratings'));
 Post_quality_ratings.deny(denyThunkFactory(Post_quality_ratings, 'Post_quality_ratings'));
-
-Summary_ratings.allow(allowThunkFactory('Summary_ratings'));
-Summary_ratings.deny(denyThunkFactory(Summary_ratings, 'Summary_ratings'));
 
 Comment_ratings.allow(allowThunkFactory('Comment_ratings'));
 Comment_ratings.deny(denyThunkFactory(Comment_ratings, 'Comment_ratings'));

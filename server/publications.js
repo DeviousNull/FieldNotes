@@ -188,16 +188,6 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                             return Meteor.users.find(summary.userID, {'fields': {username :1}})
                         }
                     },
-                    { // Post Summary Quality Ratings (Public)
-                        'find': function(summary, post) {
-                            return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
-                        },
-                    },
-                    { // Post Summary Quality Ratings (Private)
-                        'find': function(summary, post) {
-                            return Summary_ratings.find({'summaryID': summary._id, 'userID': this.userId});
-                        },
-                    },
                 ]
             },
             { // Post Tags
@@ -369,14 +359,7 @@ Meteor.publishComposite('retrieveSummaryList', { // All Posts
                 //return Summaries.find({}, {sort:{quality_rating: -1}, limit :10});
                 /******************************************************************************************/
 
-            }, // Post Summary Quality Ratings (Public)
-            'children': [
-                { 
-                    'find': function(summary, post) {
-                        return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
-                    },
-                },
-            ]
+            },
         }
     ]
 });
@@ -397,14 +380,7 @@ Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
             { // Post Summaries
                 'find': function(post) {
                     return Summaries.find({'postID': post._id});
-                }, // Post Summary Quality Ratings (Public)
-                'children': [
-                    { 
-                        'find': function(summary, post) {
-                            return Summary_ratings.find({'summaryID': summary._id}, {'fields': {userID :0}});
-                        },
-                    },
-                ]
+                },
             }
         ]
     };

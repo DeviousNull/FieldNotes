@@ -35,21 +35,8 @@ Template.summaryItem.helpers({
         return {_id: summary.postID};
     },
 
-    'summary_quality_rating': function() {
-        var all_ratings = Summary_ratings.find({
-            'summaryID': Template.instance().data._id,
-        });
-
-        if (all_ratings.count() == 0) {
-            return -1;
-        }
-
-        var total = 0;
-        all_ratings.forEach(function(current) {
-            total += current.rating;
-        });
-
-        return (total / all_ratings.count());
-    },
+    'influence': function() {
+        return (this.upvoteUserIDArray.length - this.downvoteUserIDArray.length);
+    }
 
 });

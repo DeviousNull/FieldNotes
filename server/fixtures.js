@@ -188,14 +188,10 @@ if(Posts.find().count() === 0){
                         userID : UsersData[get_rand(0,2)]['_id'],
                         postID : j,
                         text : html+gen_lorem_ipsum(10,150,1),
-                        isOfficialAbstract: false
+                        isOfficialAbstract: false,
+                        upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
+                        downvoteUserIDArray : [],
                     });
-
-            Summary_ratings.insert({
-                'userID': UsersData[get_rand(0,2)]['_id'],
-                'summaryID': s_id,
-                'rating': sum_rate,
-            });
 
             for(var l=0;l<com_rate;l++)
                 Comment_ratings.insert({
