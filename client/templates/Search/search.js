@@ -1,6 +1,7 @@
 Template.searchTemplate.onCreated(function() {
     this.postResultsList = new ReactiveVar(null);
     this.searchInputHasFocus = new ReactiveVar(false);
+    this.selectedSearchType = new ReactiveVar("papers");
 
     var self = this;
 
@@ -27,6 +28,9 @@ Template.searchTemplate.events({
             Template.instance().$(":focus").blur();
         }
     },
+    'change input[name=doc_type]': function(ev) {
+        Template.instance().selectedSearchType.set(ev.target.value);
+    }
 });
 
 //Array of indexes to search. Indexes defined in collections.js
@@ -39,5 +43,8 @@ Template.searchTemplate.helpers({
     },
     'search_input_has_focus': function() {
         return Template.instance().searchInputHasFocus.get();
+    },
+    'search_type_is': function(type) {
+        return (Template.instance().selectedSearchType.get() === type);
     },
 });

@@ -1,5 +1,12 @@
 <template name="searchTemplate">
     <div class="col-md-8 center-block">
+        <div>
+            Search For:
+            <input type="radio" name="doc_type" value="papers" checked/>Papers
+            <input type="radio" name="doc_type" value="dictionaries"/>Dictionaries
+            <input type="radio" name="doc_type" value="terms"/>Terms
+        </div>
+
         <div class="search_div">
             {{> esInput id="search_input" class="search_input" index=indexes timeout="1000" placeholder="Search..." }}
 
@@ -12,23 +19,39 @@
                 <li>No results found.</li>
                 {{/ifEsHasNoResults}}
 
-                {{#esEach id="search_input" index="posts"}}
-                <li>Paper: <a href="{{pathFor 'postPage'}}"> {{>titleTemplate}} {{author}} </a></li>
-                {{/esEach}}
-
-                {{#esEach id="search_input" index="dictionary"}}
-                <li>Dictionary: <a href="{{pathFor 'dictionaryPage'}}">{{name}} </a></li>
-                {{/esEach}}
-
-                {{#esEach id="search_input" index="terms"}}
-                <li>Term: <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a></li>
-                {{/esEach}}
+                {{#if search_type_is "papers"}}
+                    {{#esEach id="search_input" index="posts"}}
+                        <li>Paper: <a href="{{pathFor 'postPage'}}"> {{>titleTemplate}} {{author}} </a></li>
+                    {{/esEach}}
+                {{/if}}
+                {{#if search_type_is "dictionaries"}}
+                    {{#esEach id="search_input" index="dictionary"}}
+                        <li>Dictionary: <a href="{{pathFor 'dictionaryPage'}}">{{name}} </a></li>
+                    {{/esEach}}
+                {{/if}}
+                {{#if search_type_is "terms"}}
+                    {{#esEach id="search_input" index="terms"}}
+                        <li>Term: <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a></li>
+                    {{/esEach}}
+                {{/if}}
             </ul>
         </div>
         {{#unless search_input_has_focus}}
-        {{#with post_list}}
-        {{> postsList}}
-        {{/with}}
+            {{#if search_type_is "papers"}}
+                {{#with post_list}}
+                    {{> postsList}}
+                {{/with}}
+            {{/if}}
+            {{#if search_type_is "dictionaries"}}
+                {{#esEach id="search_input" index="dictionary"}}
+                    <a href="{{pathFor 'dictionaryPage'}}">{{name}}</a><br/>
+                {{/esEach}}
+            {{/if}}
+            {{#if search_type_is "terms"}}
+                {{#esEach id="search_input" index="terms"}}
+                    <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a><br/>
+                {{/esEach}}
+            {{/if}}
         {{/unless}}
     </div>
 </template>
