@@ -1,6 +1,7 @@
+
+
 Template.adminPage.helpers({
-	/*
-	*/
+	
 });
 
 Template.adminPage.events({

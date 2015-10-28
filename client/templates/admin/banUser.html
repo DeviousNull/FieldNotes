@@ -7,14 +7,24 @@
                     	<label for="username">Enter Username: </label>
                 	</div>
                 	<div class="col-md-7">
-	                    <input type="text" ng-model="nameValue" name="username" value="" class="required form-control" placeholder="username">
+	                    <input type="text" ng-model="nameValue" name="username" value="" class="required form-control" placeholder="enter username...">
     				</div>
     				<div class="col-md-3">       
-    	            	<button name="banUserButton" id="ban-user-button" type="button" class="btn btn-primary">Ban User</button>
+    	            	<button name="banUserButton" id="ban-user-button" type="button" class="btn btn-warning">Ban User</button>
         	        </div>
             	</div>
         	</div>
-        	<div>Current Users:<ul>{{#each users}} <li>{{username}} [{{roles}}]</li> {{/each}}</ul></div>
+
+        	<div>
+                Current Users: [role(s)]
+                <ul>
+                    {{#each users}} 
+                    <li>
+                        {{username}} [{{roles}}]                        
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>    
         </div>
     </form>
 

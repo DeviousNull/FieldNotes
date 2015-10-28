@@ -1,7 +1,7 @@
 Template.banUser.helpers({
 	'users': function(){
         return Meteor.users.find();
-    }
+    },
 });
 
 Template.banUser.events({
@@ -10,11 +10,22 @@ Template.banUser.events({
 
 	  	var user = Meteor.users.findOne({username: usr});
 
-	  	if(!user)	alert(usr+" is NOT a valid username.");
+	  	if(!user) alert(usr+" is NOT a valid username.");
 	  	else	
-	  		if(confirm("Are you sure you want to ban this user?"))
-            	Meteor.call('ban-user', user._id);
+	  		if(confirm("Are you sure you want to ban this user?")){
+	  			Meteor.call('ban-user', user._id);
+	  			Meteor.call('log-out-user', user._id);
+	  		}
 	  	
 	  	Router.go('banUser');
+	},
+
+	'click button[name=enum-ban-button]': function(e) {
+        if (confirm("Are you sure you want to ban this user?")) {
+            var user = this;
+    		
+     	   	Meteor.call('ban-user', user._id);
+  			Meteor.call('log-out-user', user._id);
+    	}
 	}
 });

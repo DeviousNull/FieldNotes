@@ -17,7 +17,7 @@ Accounts.validateLoginAttempt(function(info){
 	var user=info.user;
 	
 	if(Roles.userIsInRole(user._id, ["banned"])){
-		alert("You have been banned.");
+		throw new Meteor.Error("User banned", "You have been banned.");
 		return false;
 	}
 	else

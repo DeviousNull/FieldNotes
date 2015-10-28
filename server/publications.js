@@ -390,6 +390,6 @@ Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
 Meteor.publish("userList", function(){
     if(Roles.userIsInRole(this.userId, ["admin"]))
         return Meteor.users.find();
-    return -1;
+    return null;
 });
 
