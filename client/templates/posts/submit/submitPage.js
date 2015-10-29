@@ -21,10 +21,10 @@ Template.submitPage.events({
         }
 
         if (!validated) {
+
             alert("Please fill in all required fields.");
             return;
         }
-
         //Insert the new post
         var post = {
             userID: Meteor.user()._id,
@@ -105,26 +105,29 @@ Template.submitPage.helpers({
   
 });
 Template.addTerm.onCreated(function() {
-    this.selectedTerm = new ReactiveVar;
+    this.previewDates = new ReactiveVar;
+    this.selectedDictionary = new ReactiveVar;
 
 });
 Template.addTerm.helpers({
-    'addTermTermOptions': function() {
-        return Term.find({parentID: 0});
+    'addTermDictionaryOptions': function() {
+        return Dictionaries.find({parentID: 0});
+    },
+    'dictionaries': function() {
+        return Dictionaries.find();
     },
     'getLabels': function() {
         return Adminlabels.find({'dictionaryID': this._id});
     },
-    'terms': function() {
-        //Return the terms
-        return Terms.find();
+    'preview_datas': function() {
+        return Template.instance().previewDates.get();
     },
-     'selectedTerm': function() {
-        var cat = Template.instance().selectedTerm.get();
+     'selectedDictionary': function() {
+        var cat = Template.instance().selectedDictionary.get();
         if (cat) {
-            return cat.Term_name;
+            return cat.name;
         } else {
-            return 'Select a Term';
+            return 'Select a Dictionary';
         }
     },
 });
@@ -133,13 +136,30 @@ Template.addTerm.events({
 
     // Click event for submit button
     'click button[name=addButton]': function(e) {
+
+        var validated = true;
+
+        Template.instance().$('.required').map(function(index, object) {
+            if (this.value === '') {
+                validated = false;
+            }
+        });
+        
+        if (!Template.instance().selectedDictionary.get()) {
+            validated = false;
+        }
+
+        if (!validated) {
+            
+            alert("Please fill in all required fields.");
+            return;
+        }
         // Insert new term
-        var term = {
+          var term = {
             term_name: Template.instance().$('[name=term_name]').val(),
             dictionaryID: this._id
         };
         term._id = Terms.insert(term);
-       
 
         // Insert new definition
         Definitions.insert({
@@ -158,17 +178,13 @@ Template.addTerm.events({
                 value: $(this).val(),
             });
         });
-        var post = {
-             termD: Template.instance().selectedTerm.get()._id,
-        }
-        post._id = Posts.insert(post);
 
          // Route to the dictionary page and send it the data
         Router.go('dictionaryPage', this);
-
     },
+
     'click .dropdown-menu li a': function(e) {
-        Template.instance().selectedTerm.set(this);
+        Template.instance().selectedDictionary.set(this);
         },
        
 });

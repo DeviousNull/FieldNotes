@@ -177,22 +177,25 @@
                      <form>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+            <div class="col-md-3">
+                    <label for="title">Dictionary</label>
+                </div>
+                <div class="col-md-9">
 
                   <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
-                            {{selectedTerm}}<span class="caret"></span>
+                            {{selectedDictionary}}<span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu2">
-                            {{#each terms}}
-                                <li role="presentation"><a role="menuitem" tabindex="1" href="#" name="term_Name">{{term_name}}</a></li>
+                           {{#each dictionaries}}
+                                <li role="presentation"><a role="menuitem" tabindex="1" href="#" name="dictionaryName">{{name}}</a></li>
                             {{/each}}
                         </ul>
                     </div>               
         
                 </div>
             </div>
-            <div class="row">
+             <div class="row">
                 <div class="col-md-2">
                     <label for="name">Entry Name: </label>
                 </div>
