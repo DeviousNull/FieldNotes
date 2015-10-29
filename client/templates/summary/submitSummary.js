@@ -13,6 +13,8 @@ Template.submitSummary.events({
             postID: this._id,
             text: Template.instance().$('textarea[name=summary]').val(),
             isOfficialAbstract: Template.instance().$('input[name=is-official-abstract]').is(":checked"),
+            upvoteUserIDArray: [],
+            downvoteUserIDArray: [],
         };
 
         Summaries.insert(summary);

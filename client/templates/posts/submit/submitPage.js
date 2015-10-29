@@ -40,7 +40,9 @@ Template.submitPage.events({
             publisher: Template.instance().$('[name=publisher]').val(),
             categoryID: Template.instance().selectedCategory.get()._id,
             definedTermIDArray : [], //TODO(James): actually fill this array
-            usedTermIDArray : [] //TODO(James): actually fill this array
+            usedTermIDArray : [], //TODO(James): actually fill this array
+            upvoteUserIDArray: [],
+            downvoteUserIDArray: [],
         };
 
         post._id = Posts.insert(post);
@@ -51,6 +53,8 @@ Template.submitPage.events({
             postID: post._id,
             text: Template.instance().$('[name=summary]').val(),
             isOfficialAbstract: Template.instance().$('input[name=is-official-abstract]').is(":checked"),
+            upvoteUserIDArray: [],
+            downvoteUserIDArray: [],
         };
 
         Summaries.insert(summary);
