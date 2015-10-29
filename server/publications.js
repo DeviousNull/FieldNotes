@@ -126,19 +126,11 @@ Meteor.publish('retrieveLayout', function() {
 // All documents needed to render a postsList template
 Meteor.publishComposite('retrievePostsList', { // All Posts
     'find': function() {
-        //return Posts.find({});
-        
-        /* temporary sort/pagination implementation ***********************************************/
-            /*if(all)
-                return Posts.find({}, {sort:{pop_rating: -1, quality_rating: -1}});
-            */
-            return Posts.find({}, {sort:{pop_rating: -1, quality_rating: -1}});//, limit :10});
-        /******************************************************************************************/
+        return Posts.find({});
     },
     'children': [
         { // Post Top Summary
             'find': function(post) {
-                //return Summaries.find({'postID': post._id});
                 return Summaries.find({'postID': post._id}, {'sort': {'quality_rating': -1}, 'limit':1 });
             }
         },
@@ -239,9 +231,17 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
             return Categories.find(_categoryID);
         },
         'children': [
-            { // Category Posts
+            { // Category & SubCategory Posts            
                 'find': function(category) {
-                    return Posts.find({'categoryID': category._id});
+                    var cats = [category._id],
+                        subCats = Categories.find({parentID: category._id}).forEach(function(obj){
+                        cats.push(obj._id);});
+
+                    return Posts.find({
+                        'categoryID': {
+                            '$in': cats
+                        }
+                    });
                 },
                 'children': [
                     { // Category Post Submitter
