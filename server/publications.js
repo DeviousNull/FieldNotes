@@ -120,7 +120,7 @@ Meteor.publishComposite('getDefinitionsFromDictionaryID', function(_dictionaryID
 ****************/
 // All documents needed to render the layout template
 Meteor.publish('retrieveLayout', function() {
-    return Categories.find({parentID: 0}); // All top-level categories
+    return Categories.find({}); // All categories
 });
 
 // All documents needed to render a postsList template
