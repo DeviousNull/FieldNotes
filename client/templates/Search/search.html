@@ -11,7 +11,7 @@
             {{> esInput id="search_input" class="search_input" index=indexes timeout="1000" placeholder="Search..." }}
 
             <ul class="search_results {{#if search_input_has_focus}}search_results_active{{/if}}">
-                {{#ifEsIsSearching id="search_input" index="posts"}}
+                {{#ifEsIsSearching id="search_input" index=indexes}}
                 <li>Searching...</li>
                 {{/ifEsIsSearching}}
 
@@ -20,9 +20,9 @@
                 {{/ifEsHasNoResults}}
 
                 {{#if search_type_is "papers"}}
-                    {{#esEach id="search_input" index="posts"}}
+                    {{#each post_list}}
                         <li>Paper: <a href="{{pathFor 'postPage'}}"> {{>titleTemplate}} {{author}} </a></li>
-                    {{/esEach}}
+                    {{/each}}
                 {{/if}}
                 {{#if search_type_is "dictionaries"}}
                     {{#esEach id="search_input" index="dictionary"}}
