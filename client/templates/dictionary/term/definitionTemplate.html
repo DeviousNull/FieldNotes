@@ -1,8 +1,6 @@
 <template name="definitionTemplate">
     <div class="row">
         <div class="col-md-12">
-            <!-- Insert the uneditable rate template -->
-            {{> uneditableRateItTemplate}}        
             <div class="well well-lg">
                 <div>
                     {{#if isAdmin}}
@@ -12,10 +10,6 @@
                 {{#mathjax}}
                 {{#markdown}}{{{markdownedText}}}{{/markdown}}
                 {{/mathjax}}
-                <div>
-                    <!-- Insert the editable rate template -->
-                    {{> rateitTemplate}}
-                </div>
             </div>
         </div>
     </div>
