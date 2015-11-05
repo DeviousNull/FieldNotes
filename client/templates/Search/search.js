@@ -1,5 +1,6 @@
 Template.searchTemplate.onCreated(function() {
-    this.postResultsList = new ReactiveVar(null);
+    this.postResultsList = new ReactiveVar([]);
+    this.summaryResultsList = new ReactiveVar([]);
     this.searchInputHasFocus = new ReactiveVar(false);
     this.selectedSearchType = new ReactiveVar("papers");
 
@@ -12,6 +13,20 @@ Template.searchTemplate.onCreated(function() {
 
         instance.on('searchResults', function (results) {
             self.postResultsList.set(results);
+        });
+    });
+
+    this.autorun(function(comp) {
+        var instance = EasySearch.getComponentInstance(
+            { 'id': 'search_input', 'index': 'summaries' }
+        );
+
+        instance.on('searchResults', function (results) {
+            if (results) {
+                self.summaryResultsList.set(results);
+            } else {
+                self.summaryResultsList.set([]);
+            }
         });
     });
 });
@@ -36,10 +51,18 @@ Template.searchTemplate.events({
 //Array of indexes to search. Indexes defined in collections.js
 Template.searchTemplate.helpers({
     'indexes': function() {
-        return ['posts', 'dictionary', 'terms'];
+        return ['posts', 'dictionary', 'terms', 'summaries'];
     },
     'post_list': function() {
-        return Template.instance().postResultsList.get();
+        var all_posts = (Template.instance().postResultsList.get() || []).concat([]);
+        var summaries = (Template.instance().summaryResultsList.get() || []);
+        for (var x = 0; x < summaries.length; x++) {
+            var post = Posts.findOne(summaries[x].postID);
+            if (post && all_posts.indexOf(post) === -1) {
+                all_posts.push(post);
+            }
+        }
+        return all_posts;
     },
     'search_input_has_focus': function() {
         return Template.instance().searchInputHasFocus.get();
