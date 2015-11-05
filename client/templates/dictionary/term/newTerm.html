@@ -29,6 +29,41 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="title">List of Categories:</label>
+                </div>
+                <div class="col-md-9">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
+                            {{selectedCategory}}<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
+                            {{#each categories}}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName">{{ category_name }}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+                <div class="row">
+                 <div class="col-md-7">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            This Definition Belong to : (insert selected category)
+                        </div>
+                        <div class="panel-body">
+                            <textarea name="cate" value=""></textarea>>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+
+
             <div class="row"><p></p></div>
             <div class="row">
                 <div class="col-md-12">
@@ -51,5 +86,7 @@
                 <button type="button" name="submitButton" class="btn btn-primary">Submit</button>
             </div>
         </div>
+
     </form>
 </template>
+

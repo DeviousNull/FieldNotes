@@ -1,5 +1,6 @@
 Template.termPage.onCreated(function() {
     this.showAllDefinitions = new ReactiveVar(false);
+    this.showAllCates = new ReactiveVar(false);
     this.editMode = new ReactiveVar(false);
 });
 
@@ -10,6 +11,9 @@ Template.termPage.helpers({
 
     'showAllDefinitions' : function() {
         return Template.instance().showAllDefinitions.get();
+    },
+    'showAllCates' : function() {
+        return Template.instance().showAllCates.get();
     },
 
     //Return the admin labels for a dictionary
@@ -37,9 +41,15 @@ Template.termPage.helpers({
     'allDefinitions' : function() {
         return Definitions.find({'termID': this._id});
     },
+    'allCates' : function() {
+        return Cates.find({'termID': this._id});
+    },
 
     'topDefinition' : function() {
         return Definitions.findOne({'termID': this._id}, {'sort': {'quality_rating': -1}});
+    },
+    'topCate' : function() {
+        return Cates.findOne({'termID': this._id}, {'sort': {'quality_rating': -1}});
     },
 });
 
@@ -88,8 +98,14 @@ Template.termPage.events({
     'click button[name=showAllDefinitions]': function(e){
         Template.instance().showAllDefinitions.set(true);
     },
-
     'click button[name=showTopDefinition]': function(e){
         Template.instance().showAllDefinitions.set(false);
     },
+    'click button[name=showAllCates]': function(e){
+        Template.instance().showAllCates.set(true);
+    },
+    'click button[name=showTopAllCate]': function(e){
+        Template.instance().showAllCates.set(true);
+    },
+    
 });

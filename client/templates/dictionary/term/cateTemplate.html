@@ -1,0 +1,16 @@
+<template name="cateTemplate">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-lg">
+                <div>
+                    {{#if isAdmin}}
+                    <button class="btn btn-sm btn-danger deleteCateButton" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    {{/if}}
+                </div>
+                {{#mathjax}}
+                {{#markdown}}{{{markdownedText}}}{{/markdown}}
+                {{/mathjax}}
+            </div>
+        </div>
+    </div>
+</template>
