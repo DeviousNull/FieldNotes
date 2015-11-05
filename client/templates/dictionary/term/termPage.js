@@ -48,7 +48,7 @@ Template.termPage.helpers({
     'topDefinition' : function() {
         return Definitions.findOne({'termID': this._id}, {'sort': {'quality_rating': -1}});
     },
-    'topDefinition' : function() {
+    'topCate' : function() {
         return Cates.findOne({'termID': this._id}, {'sort': {'quality_rating': -1}});
     },
 });
@@ -98,14 +98,14 @@ Template.termPage.events({
     'click button[name=showAllDefinitions]': function(e){
         Template.instance().showAllDefinitions.set(true);
     },
-    'click button[name=showAllCates]': function(e){
-        Template.instance().showAllCates.set(true);
-    },
-
     'click button[name=showTopDefinition]': function(e){
         Template.instance().showAllDefinitions.set(false);
     },
-    'click button[name=showTopCate]': function(e){
-        Template.instance().showAllCates.set(false);
+    'click button[name=showAllCates]': function(e){
+        Template.instance().showAllCates.set(true);
     },
+    'click button[name=showTopAllCate]': function(e){
+        Template.instance().showAllCates.set(true);
+    },
+    
 });
