@@ -66,6 +66,43 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6">
+                    <h6> This Definition Belong to : </h6>
+                </div>
+                <div class="row">
+                <div class="col-md-6">
+                    {{#if showAllCates}}
+                        {{#each allCates}}
+                            {{> cateTemplate}}
+                        {{/each}}
+                    {{else}}
+                        {{#with topCate}}
+                            {{> cateTemplate}}
+                        {{/with}}
+                    {{/if}}
+                </div>
+            </div>
+             
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    {{#if loggedIn}}
+                    <a class="btn btn-default" href="{{ pathFor 'submitCate'}}">Click here to add a new category</a>
+                    {{/if}}
+                </div>
+                <div class="col-md-4">
+                    {{#if showAllCates}}
+                    <button class="btn btn-default" type="button" style="float: right" name="showTopCate">Show top Category</button>
+                    {{else}}
+                    <button class="btn btn-default" type="button" style="float: right" name="showAllCates">Show all Categories</button>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row"><p></p></div>
+            
+
+
             {{#each labels}}
                 <div class="row">
                     <input type="hidden" name="adminLabelID" value="{{_id}}"/>

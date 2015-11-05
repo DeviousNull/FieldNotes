@@ -177,6 +177,10 @@ var accessControlList = {
         'insert' : aclUserIsAuthed,
         'remove' : aclUserIsAdmin
     },
+    'Cates' : {
+        'insert' : aclUserIsAuthed,
+        'remove' : aclUserIsAdmin
+    },
     'Term_label_values' : {
         'insert' : aclUserIsAuthed,
         'update' : aclUserIsAdmin,
@@ -316,8 +320,21 @@ var validationList = {
         'references': [
             {'termID':             Term_label_values},
             {'termID':             Definitions},
+            {'termID':             Cates},
             {'definedTermIDArray': Posts},
             {'usedTermIDArray':    Posts},
+        ]
+    },
+     'Cates' : {
+        'key': [],
+        'format': {
+            'termID':         valIsForeignKey(Terms),
+            'userID':         valIsCurrentUserID,
+            'text':           valMatches(String),
+            'quality_rating': valMatches(Number),
+            'numRaters':      valMatches(Number),
+        },
+        'references': [
         ]
     },
     'Definitions' : {
@@ -573,6 +590,9 @@ Categories.deny(denyThunkFactory(Categories, 'Categories'));
 
 Definitions.allow(allowThunkFactory('Definitions'));
 Definitions.deny(denyThunkFactory(Definitions, 'Definitions'));
+
+Cates.allow(allowThunkFactory('Cates'));
+Cates.deny(denyThunkFactory(Cates, 'Cates'));
 
 Term_label_values.allow(allowThunkFactory('Term_label_values'));
 Term_label_values.deny(denyThunkFactory(Term_label_values, 'Term_label_values'));
