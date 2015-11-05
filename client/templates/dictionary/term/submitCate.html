@@ -1,0 +1,17 @@
+<template name="submitCate">
+    <div class="row">
+        <div class="col-md-6">
+            New category for: {{term_name}}
+        </div>
+    </div>
+    <form>
+        <div class="row">
+            <textarea name="cate"></textarea>
+        </div>
+        Preview:
+        {{#markdown}}{{{preview_data}}}{{/markdown}}
+        <div class="row">
+            <button type="button" name="submitButton" class='btn btn-primary'>Submit</button>
+        </div>
+    </form>
+</template>

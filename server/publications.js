@@ -98,6 +98,12 @@ Meteor.publish('getDefinitionsFromTermID', function(_termID){
     return Definitions.find({termID: _termID});
 });
 
+//Publish all the cates for the term ID
+Meteor.publish('getCatesFromTermID', function(_termID){
+    check(_termID, String);
+    return Cates.find({termID: _termID});
+});
+
 //Publish all the definitions for all terms in a dictionary
 Meteor.publishComposite('getDefinitionsFromDictionaryID', function(_dictionaryID){
     check(_dictionaryID, String);
@@ -109,6 +115,22 @@ Meteor.publishComposite('getDefinitionsFromDictionaryID', function(_dictionaryID
             { // Term Definitions
                 'find': function(term) {
                     return Definitions.find({'termID': term._id});
+                }
+            }
+        ]
+    };
+});
+
+Meteor.publishComposite('getCatesFromDictionaryID', function(_dictionaryID){
+    check(_dictionaryID, String);
+    return { // All Dictionary Terms
+        'find': function() {
+            return Terms.find({'dictionaryID': _dictionaryID});
+        },
+        'children': [
+            { // Term Cates
+                'find': function(term) {
+                    return Cates.find({'termID': term._id});
                 }
             }
         ]
@@ -317,6 +339,11 @@ Meteor.publishComposite('retrieveTermPage', function(_termID) {
             { // Term Definitions
                 'find': function(term) {
                     return Definitions.find({'termID': term._id});
+                }
+            },
+            { // Term Definitions
+                'find': function(term) {
+                    return Cates.find({'termID': term._id});
                 }
             }
         ]
