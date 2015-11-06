@@ -255,9 +255,22 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
         'children': [
             { // Category & SubCategory Posts            
                 'find': function(category) {
-                    var cats = [category._id],
-                        subCats = Categories.find({parentID: category._id}).forEach(function(obj){
-                        cats.push(obj._id);});
+                    var cats = [category._id];
+
+                    var get_sub_categories = function recurs(parentCats){
+                        parentCats.forEach(function(parent_id){
+                            var subCats=[];
+
+                            Categories.find({parentID: parent_id}).forEach(function(cat){
+                                subCats.push(cat._id);
+                                cats.push(cat._id);
+                            });
+                            
+                            if(subCats.length)
+                                recurs(subCats);
+                        });
+                    } 
+                    get_sub_categories(cats);
 
                     return Posts.find({
                         'categoryID': {
@@ -381,11 +394,6 @@ Meteor.publishComposite('retrieveSummaryList', { // All Posts
         { // Post Summaries
             'find': function(post) {
                 return Summaries.find({'postID': post._id});
-
-                /* temporary sort/pagination implementation ***********************************************/
-                //return Summaries.find({}, {sort:{quality_rating: -1}, limit :10});
-                /******************************************************************************************/
-
             },
         }
     ]
