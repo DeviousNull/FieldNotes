@@ -169,11 +169,6 @@ Meteor.publishComposite('retrievePostsList', { // All Posts
                 return Meteor.users.find(post.userID, {'fields': {'username':1}});
             }
         },
-        { // Post Ratings (Public)
-            'find': function(post) {
-                return Post_quality_ratings.find({'postID': post._id}, {'fields': {userID :0}});
-            }
-        },
     ]
 });
 
@@ -189,16 +184,6 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                 'find': function(post) {
                     return Meteor.users.find(post.userID, {'fields': {username :1}})
                 }
-            },
-            { // Post Quality Ratings (Public)
-                'find': function(post) {
-                    return Post_quality_ratings.find({postID: _postID}, {'fields': {userID :0}});
-                },
-            },
-            { // Post Quality Ratings (Private)
-                'find': function(post) {
-                    return Post_quality_ratings.find({postID: _postID, userID: this.userId});
-                },
             },
             { // Post Summaries
                 'find': function(post) {
@@ -275,11 +260,6 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
                         'find': function(post, category) {
                             return Summaries.find({'postID': post._id});
                         },
-                    },
-                    { // Post Ratings (Public)
-                        'find': function(post) {
-                            return Post_quality_ratings.find({'postID': post._id}, {'fields': {userID :0}});
-                        }
                     },
                 ]
             }
