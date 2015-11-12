@@ -42,25 +42,19 @@ Template.postPage.events({
     },
 
     'click #user-rating': function(e) {
-        var user_rating = Post_quality_ratings.findOne({
-            'userID': Meteor.userId(),
-            'postID': Template.instance().data._id
-        });
+        var qratings = Template.instance().data.quality_ratings;
+        var user_rating = -1;
+        for (var i = 0; i < qratings.length; i++) {
+            if (qratings[i].userID === Meteor.userId()) {
+                user_rating = qratings[i].rating;
+                break;
+            }
+        }
 
-        if (!user_rating) {
-            Post_quality_ratings.insert({
-                'userID': Meteor.userId(),
-                'postID': Template.instance().data._id,
-                'rating': Template.instance().$('#user-rating').data('userrating'),
-            });
-        } else if (user_rating.rating != Template.instance().$('#user-rating').data('userrating')) {
-            Post_quality_ratings.update(user_rating._id, {
-                '$set': {
-                    'rating': Template.instance().$('#user-rating').data('userrating'),
-                }
-            });
+        if (user_rating === Template.instance().$('#user-rating').data('userrating')) {
+            Meteor.call('set-post-quality-rating', Template.instance().data._id, -1);
         } else {
-            Post_quality_ratings.remove(user_rating._id);
+            Meteor.call('set-post-quality-rating', Template.instance().data._id, Template.instance().$('#user-rating').data('userrating'));
         }
     },
 
@@ -170,34 +164,27 @@ Template.postPage.helpers({
     },
     
     'community_quality_rating': function() {
-        var all_ratings = Post_quality_ratings.find({
-            'postID': Template.instance().data._id,
-        });
-
-        if (all_ratings.count() == 0) {
-            return -1;
-        }
+        var qratings = Template.instance().data.quality_ratings;
 
         var total = 0;
-        all_ratings.forEach(function(current) {
-            total += current.rating;
-        });
 
-        return (total / all_ratings.count());
+        for (var i = 0; i < qratings.length; i++) {
+            total += qratings[i].rating;
+        }
+
+        return (total / qratings.length);
     },
 
     'user_quality_rating': function() {
         if (!Meteor.userId()) {
             return -1;
         } else {
-            var user_rating = Post_quality_ratings.findOne({
-                'userID': Meteor.userId(),
-                'postID': Template.instance().data._id,
-            });
-            if (user_rating) {
-                return user_rating.rating;
-            } else {
-                return -1;
+            var qratings = Template.instance().data.quality_ratings;
+
+            for (var i = 0; i < qratings.length; i++) {
+                if (qratings[i].userID === Meteor.userId()) {
+                    return qratings[i].rating;
+                }
             }
         }
     },

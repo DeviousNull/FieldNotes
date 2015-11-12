@@ -186,14 +186,6 @@ var accessControlList = {
         'update' : aclUserIsAdmin,
         'remove' : aclUserIsAdmin,
     },
-    'Post_quality_ratings' : {
-        'insert' : aclUserIsAuthed,
-        'update' : aclUserIsOwner('userID'),
-        'remove' : aclANY([
-            aclUserIsAdmin,
-            aclUserIsOwner('userID'),
-        ]),
-    },
     'Comment_ratings' : {
         'insert' : aclUserIsAuthed,
         'update' : aclUserIsOwner('userID'),
@@ -247,11 +239,14 @@ var validationList = {
             'usedTermIDArray':    valIsForeignKeyArray(Terms),
             'upvoteUserIDArray':  valMatches([Match.Where(conIsAnyUserID)]),
             'downvoteUserIDArray':valMatches([Match.Where(conIsAnyUserID)]),
+            'quality_ratings':    valMatches([{
+                'userID': Match.Where(conIsAnyUserID),
+                'rating': Match.Integer,
+            }]),
         },
         'references': [
             {'postID': Comments},
             {'postID': Summaries},
-            {'postID': Post_quality_ratings},
         ]
     },
     'Comments' : {
@@ -355,16 +350,6 @@ var validationList = {
             'termID':        valIsForeignKey(Terms),
             'adminlabelsID': valIsForeignKey(Adminlabels),
             'value':         valMatches(String),
-        },
-        'references': [
-        ]
-    },
-    'Post_quality_ratings' : {
-        'key': [ 'userID', 'postID' ],
-        'format': {
-            'userID':   valIsCurrentUserID,
-            'postID':   valIsForeignKey(Posts),
-            'rating':   valIsNumberInRange(1, 5),
         },
         'references': [
         ]
@@ -596,9 +581,6 @@ Cates.deny(denyThunkFactory(Cates, 'Cates'));
 
 Term_label_values.allow(allowThunkFactory('Term_label_values'));
 Term_label_values.deny(denyThunkFactory(Term_label_values, 'Term_label_values'));
-
-Post_quality_ratings.allow(allowThunkFactory('Post_quality_ratings'));
-Post_quality_ratings.deny(denyThunkFactory(Post_quality_ratings, 'Post_quality_ratings'));
 
 Comment_ratings.allow(allowThunkFactory('Comment_ratings'));
 Comment_ratings.deny(denyThunkFactory(Comment_ratings, 'Comment_ratings'));

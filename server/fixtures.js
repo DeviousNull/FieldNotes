@@ -162,15 +162,10 @@ if(Posts.find().count() === 0){
                     usedTermIDArray : [ TermsData[1]['_id'] ],
                     upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
                     downvoteUserIDArray : [],
+                    quality_ratings : [],
                 });
         
         var html=(i%5===0) ? '<strong>BOLD</strong> ' : '';
-
-        Post_quality_ratings.insert({
-            'userID': UsersData[get_rand(0,2)]['_id'],
-            'postID': j,
-            'rating': quality_rate,
-        });
         
         for(var k=0,n=get_rand(1,10);k<n;k++){
             var sum_rate = (Math.random()*(5)),
