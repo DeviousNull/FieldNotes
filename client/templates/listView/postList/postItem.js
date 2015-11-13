@@ -20,20 +20,15 @@ Template.postItem.helpers({
     },
 
     'community_quality_rating': function() {
-        var all_ratings = Post_quality_ratings.find({
-            'postID': Template.instance().data._id,
-        });
-
-        if (all_ratings.count() == 0) {
-            return -1;
-        }
+        var qratings = Template.instance().data.quality_ratings;
 
         var total = 0;
-        all_ratings.forEach(function(current) {
-            total += current.rating;
-        });
 
-        return (total / all_ratings.count());
+        for (var i = 0; i < qratings.length; i++) {
+            total += qratings[i].rating;
+        }
+
+        return (total / qratings.length);
     },
 
     'up_pressed': function() {

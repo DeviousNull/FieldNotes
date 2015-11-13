@@ -55,6 +55,7 @@ Template.submitPage.events({
             isOfficialAbstract: Template.instance().$('input[name=is-official-abstract]').is(":checked"),
             upvoteUserIDArray: [],
             downvoteUserIDArray: [],
+            quality_ratings : [],
         };
 
         Summaries.insert(summary);
