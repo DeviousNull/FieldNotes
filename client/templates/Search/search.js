@@ -1,6 +1,7 @@
 Template.searchTemplate.onCreated(function() {
     this.postResultsList = new ReactiveVar([]);
     this.summaryResultsList = new ReactiveVar([]);
+    this.termResultsList = new ReactiveVar([]);
     this.searchInputHasFocus = new ReactiveVar(false);
     this.selectedSearchType = new ReactiveVar("papers");
 
@@ -26,6 +27,20 @@ Template.searchTemplate.onCreated(function() {
                 self.summaryResultsList.set(results);
             } else {
                 self.summaryResultsList.set([]);
+            }
+        });
+    });
+
+    this.autorun(function(comp) {
+        var instance = EasySearch.getComponentInstance(
+            { 'id': 'search_input', 'index': 'terms' }
+        );
+
+        instance.on('searchResults', function (results) {
+            if (results) {
+                self.termResultsList.set(results);
+            } else {
+                self.termResultsList.set([]);
             }
         });
     });
@@ -63,6 +78,29 @@ Template.searchTemplate.helpers({
             }
         }
         return all_posts;
+    },
+    'term_list': function() {
+        var all_terms = (Template.instance().termResultsList.get() || []).concat([]);
+
+        all_terms.sort(function(a, b) {
+            var a_defined = Posts.find({
+                'definedTermIDArray': a._id,
+            }).count();
+            var a_used = Posts.find({
+                'usedTermIDArray': a._id,
+            }).count();
+
+            var b_defined = Posts.find({
+                'definedTermIDArray': b._id,
+            }).count();
+            var b_used = Posts.find({
+                'usedTermIDArray': b._id,
+            }).count();
+
+            return (a_defined + a_used) - (b_defined + b_used);
+        });
+
+        return all_terms;
     },
     'search_input_has_focus': function() {
         return Template.instance().searchInputHasFocus.get();
