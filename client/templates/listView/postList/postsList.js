@@ -1,7 +1,7 @@
 Template.postsList.helpers({
     'posts': function() {
         if (!Template.instance().data) {
-            return Posts.find();
+            return Posts.find({}, { 'reactive': false });
         } else {
             return Template.instance().data;
         }

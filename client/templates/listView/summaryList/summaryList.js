@@ -1,5 +1,5 @@
 Template.summaryList.helpers({
     'Summaries': function(){
-        return Summaries.find({})
+        return Summaries.find({}, { 'reactive': false });
     }
 });

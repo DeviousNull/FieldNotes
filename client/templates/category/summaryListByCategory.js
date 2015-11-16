@@ -3,8 +3,8 @@ Template.summaryListByCategory.helpers({
     'summaries': function(_categoryID){
         var summaries = [];
 
-        Posts.find({categoryID: _categoryID}).forEach(function(post) {
-            Summaries.find({postID: post._id}).forEach(function(summary) {
+        Posts.find({categoryID: _categoryID}, { 'reactive': false }).forEach(function(post) {
+            Summaries.find({postID: post._id}, { 'reactive': false }).forEach(function(summary) {
                 summaries.push(summary);
             });
         });

@@ -6,7 +6,7 @@ Template.dictionaryPage.helpers({
     //Return all terms for this dictionary
     'terms': function() {
         //Return the terms
-        return Terms.find({'dictionaryID': this._id});
+        return Terms.find({'dictionaryID': this._id}, { 'reactive': false });
     },
 
     'editMode': function() {

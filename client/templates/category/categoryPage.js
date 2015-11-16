@@ -4,7 +4,7 @@ Template.categoryPage.helpers({
         if (Template.instance().data.type == "category") {
             var post_array = Posts.find({
                 'categoryID': Template.instance().data.object._id,
-            }).fetch();
+            }, { 'reactive': false }).fetch();
 
             post_array.sort(function(a, b) {
                 var a_score = (a.upvoteUserIDArray.length - a.downvoteUserIDArray.length);
@@ -17,7 +17,7 @@ Template.categoryPage.helpers({
             var postIDs = [];
             Post_tags.find({'tag': Template.instance().data.object }).forEach(function(doc) {
                 postIDs.push(doc.postID);
-            });
+            }, { 'reactive': false });
 
             var post_array = Posts.find({
                 '_id' : {
