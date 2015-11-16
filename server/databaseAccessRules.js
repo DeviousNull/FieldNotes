@@ -133,6 +133,15 @@ function conIsAnyUserID(_val) {
     return (!!Meteor.users.findOne(_val));
 }
 
+// Condition function factory
+// Returned functions return true IFF the field is a valid _id value from the specified collection.
+function conIsForeignKey(_collection) {
+    return function(_val) {
+        var cursor = _collection.find({'_id': _val});
+        return (cursor.count() > 0);
+    };
+}
+
 /************************
 * Database Access Rules *
 *************************/
@@ -264,9 +273,11 @@ var validationList = {
         ]
     },
     'Categories':{
-        'key': [],
+        'key': [ 'category_name' ],
         'format': {
             'category_name': valMatches(String),
+            'parentID': valMatches(Match.Optional(conIsForeignKey(Categories))),
+            'isSystemCategory': valMatches(Boolean),
         },
         'references': [
             {'categoryID': Adminlabels},

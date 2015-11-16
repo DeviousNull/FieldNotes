@@ -105,37 +105,48 @@ var TermsData = Terms.find().fetch();
 if(Categories.find().count() === 0) {
     Categories.insert({
         category_name: 'Algorithms',
-        parentID : 0
+        parentID: undefined,
+        isSystemCategory: false,
     });
     Categories.insert({
         category_name : 'NP',
-        parentID : Categories.find().fetch()[0]['_id']
+        parentID : Categories.find().fetch()[0]['_id'],
+        isSystemCategory: false,
     });
     Categories.insert({
         category_name : 'Artificial Intelligence',
-        parentID : Categories.find().fetch()[0]['_id']
+        parentID : Categories.find().fetch()[0]['_id'],
+        isSystemCategory: false,
     });
     Categories.insert({
         category_name : 'Data Structures',
-        parentID : 0
+        parentID: undefined,
+        isSystemCategory: false,
     });
     Categories.insert({
         category_name : 'Discrete Math',
-        parentID : 0
+        parentID: undefined,
+        isSystemCategory: false,
     });
     Categories.insert({
         category_name : 'Trees',
-        parentID : Categories.find().fetch()[3]['_id']
+        parentID : Categories.find().fetch()[3]['_id'],
+        isSystemCategory: false,
     });
 }
 if(Posts.find().count() === 0){
     var num_cats = 12;
 
-    for(var d=0;d<num_cats;d++)
+    for(var d=0;d<num_cats;d++) {
+        var name = gen_lorem_ipsum(1,2,0).slice(0,-1);
+        if (Categories.find({ category_name : name }).count() === 0) {
             Categories.insert({
-                category_name : gen_lorem_ipsum(1,2,0).slice(0,-1),
-                parentID : 0
+                category_name : name,
+                parentID: undefined,
+                isSystemCategory: false,
             });
+        }
+    }
 
     var num_posts = 30;
 
@@ -157,7 +168,7 @@ if(Posts.find().count() === 0){
                     publisher : gen_lorem_ipsum(2,3,0),
                     publish_date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+get_rand(1800,2015),
 
-                    categoryID : Categories.find().fetch()[get_rand(0,14)]['_id'],
+                    categoryID : Categories.find({ 'isSystemCategory': false }).fetch()[get_rand(0,num_cats)]['_id'],
                     definedTermIDArray : [ TermsData[0]['_id'] ],
                     usedTermIDArray : [ TermsData[1]['_id'] ],
                     upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
