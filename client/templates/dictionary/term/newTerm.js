@@ -1,6 +1,6 @@
 Template.newTerm.onCreated(function() {
     this.previewData = new ReactiveVar;
-    this.selectedCategory = new ReactiveVar;
+    
 });
 
 Template.newTerm.helpers({
@@ -10,14 +10,7 @@ Template.newTerm.helpers({
     'categories': function() {
         return Categories.find();
     },
-      'selectedCategory': function() {
-        var cat = Template.instance().selectedCategory.get();
-        if (cat) {
-            return cat.category_name;
-        } else {
-            return 'Select a Category';
-        }
-    },
+      
 });
 
 Template.newTerm.events({
@@ -41,7 +34,7 @@ Template.newTerm.events({
         Cates.insert({
             termID: term._id,
             userID: Meteor.user()._id,
-            text: Template.instance().$('[name=cate]').val(),
+            text: Template.instance().$('[name=cates]').val(),
             quality_rating : 0,
             numRaters : 0,
         });
@@ -58,9 +51,7 @@ Template.newTerm.events({
          // Route to the dictionary page and send it the data
         Router.go('dictionaryPage', this);
     },
-    'click .dropdown-menu li a': function(e) {
-        Template.instance().selectedCategory.set(this);
-    },
+  
 });
 
 

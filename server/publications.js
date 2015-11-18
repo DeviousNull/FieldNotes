@@ -267,6 +267,35 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
     };
 });
 
+Meteor.publishComposite('retrieveTagsPage', function(_tags) {
+    check(_tags, String);
+    return { // Tags
+        'find': function() {
+            return Term_tags.find({ 'tags': _tags });
+        },
+        'children': [
+            { // Tag Terms
+                'find': function(term_tag) {
+                    return Terms.find({'_id': term_tag.termID});
+                },
+                'children': [
+                    { // Tag Term Submitter
+                        'find': function(term, term_tag) {
+                            return Meteor.users.find(term.userID, {'fields': {username :1}});
+                        },
+                    },
+                    { // Tag Post Top Summary
+                        'find': function(term, term_tag) {
+                            return Summaries.find({'termID': term._id});
+                        },
+                    }
+                ]
+            }
+        ]
+    };
+});
+
+
 // All documents needed to render a tagPage template
 Meteor.publishComposite('retrieveTagPage', function(_tag) {
     check(_tag, String);
@@ -325,7 +354,12 @@ Meteor.publishComposite('retrieveTermPage', function(_termID) {
                 'find': function(term) {
                     return Cates.find({'termID': term._id});
                 }
-            }
+            },
+             { // Post Tags
+                'find': function(term) {
+                    return Term_tags.find({termID: _termID});
+                },
+            },
         ]
     };
 });

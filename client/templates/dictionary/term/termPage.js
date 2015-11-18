@@ -2,6 +2,7 @@ Template.termPage.onCreated(function() {
     this.showAllDefinitions = new ReactiveVar(false);
     this.showAllCates = new ReactiveVar(false);
     this.editMode = new ReactiveVar(false);
+    this.addTagsMode = new ReactiveVar(false);
 });
 
 Template.termPage.helpers({
@@ -50,6 +51,13 @@ Template.termPage.helpers({
     },
     'topCate' : function() {
         return Cates.findOne({'termID': this._id}, {'sort': {'quality_rating': -1}});
+    },
+      'tagss': function() {
+        return Term_tags.find({ 'termID': Template.instance().data._id });
+    },
+
+    'add_tags_mode': function() {
+        return Template.instance().addTagsMode.get();
     },
 });
 
@@ -106,6 +114,45 @@ Template.termPage.events({
     },
     'click button[name=showTopAllCate]': function(e){
         Template.instance().showAllCates.set(true);
+    },
+
+    'click #remove_tags': function(e) {
+        if (!confirm("Are you sure you want to remove the '" + e.target.attributes['tags'].value + "' category from this paper?")) {
+            return;
+        }
+
+        Term_tags.remove(e.target.attributes['tags_id'].value);
+    },
+
+    'click #add_tags': function(e) {
+        Template.instance().addTagsMode.set(true);
+    },
+
+    'click #cancel_tags': function(e) {
+        Template.instance().addTagsMode.set(false);
+    },
+
+    'click #submit_tags': function(e) {
+        var new_tags = Template.instance().$('#tags_input').val();
+
+        var existing_tags = Term_tags.findOne({
+            'termID': Template.instance().data._id,
+            'tags': new_tags,
+        });
+
+        if (existing_tags) {
+            alert("This paper already has that category.");
+            return;
+        }
+
+        if (new_tags) {
+            Term_tags.insert({
+                'termID': Template.instance().data._id,
+                'tags': new_tags,
+            });
+        }
+
+        Template.instance().addTagsMode.set(false);
     },
     
 });

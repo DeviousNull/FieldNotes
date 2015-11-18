@@ -207,6 +207,10 @@ var accessControlList = {
         'insert' : aclUserIsAuthed,
         'remove' : aclUserIsAdmin,
     },
+    'Term_tags' : {
+        'insert' : aclUserIsAuthed,
+        'remove' : aclUserIsAdmin,
+    },
 };
 
 /************************
@@ -380,6 +384,15 @@ var validationList = {
         'format': {
             'postID':  valIsForeignKey(Posts),
             'tag':     valMatches(String),
+        },
+        'references': [
+        ]
+    },
+    'Term_tags' : {
+        'key': [ 'termID', 'tags' ],
+        'format': {
+            'termID':  valIsForeignKey(Terms),
+            'tags':     valMatches(String),
         },
         'references': [
         ]
@@ -598,3 +611,6 @@ Comment_ratings.deny(denyThunkFactory(Comment_ratings, 'Comment_ratings'));
 
 Post_tags.allow(allowThunkFactory('Post_tags'));
 Post_tags.deny(denyThunkFactory(Post_tags, 'Post_tags'));
+
+Term_tags.allow(allowThunkFactory('Term_tags'));
+Term_tags.deny(denyThunkFactory(Term_tags, 'Term_tags'));
