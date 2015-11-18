@@ -10,16 +10,31 @@ Template.newTerm.helpers({
     'categories': function() {
         return Categories.find();
     },
-      
+     'preview_data': function() {
+        return Template.instance().previewData.get();
+    },
+     'categories': function(){
+        return Categories.find().fetch().map(function(it){ return it.category_name; });
+    }
 });
+
+//Tell iron:router to wait until the template is rendered to inject data
+//otherwise the autocomplete typeahead won't work
+Template.newTerm.rendered = function() {
+  Meteor.typeahead.inject();
+};
+      
+
 
 Template.newTerm.events({
     // Click event for submit button
     'click button[name=submitButton]': function(e) {
         // Insert new term
+        
         var term = {
             term_name: Template.instance().$('[name=term_name]').val(),
-            dictionaryID: this._id
+            dictionaryID: this._id,
+            
         };
         term._id = Terms.insert(term);
 
@@ -34,7 +49,8 @@ Template.newTerm.events({
         Cates.insert({
             termID: term._id,
             userID: Meteor.user()._id,
-            text: Template.instance().$('[name=cates]').val(),
+            text: Template.instance().$('[name=cate]').val(),
+            
             quality_rating : 0,
             numRaters : 0,
         });
@@ -47,12 +63,13 @@ Template.newTerm.events({
                 value: $(this).val(),
             });
         });
-
+         
          // Route to the dictionary page and send it the data
         Router.go('dictionaryPage', this);
     },
   
 });
+
 
 
 

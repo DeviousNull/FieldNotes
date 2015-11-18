@@ -278,18 +278,6 @@ Meteor.publishComposite('retrieveTagsPage', function(_tags) {
                 'find': function(term_tag) {
                     return Terms.find({'_id': term_tag.termID});
                 },
-                'children': [
-                    { // Tag Term Submitter
-                        'find': function(term, term_tag) {
-                            return Meteor.users.find(term.userID, {'fields': {username :1}});
-                        },
-                    },
-                    { // Tag Post Top Summary
-                        'find': function(term, term_tag) {
-                            return Summaries.find({'termID': term._id});
-                        },
-                    }
-                ]
             }
         ]
     };
