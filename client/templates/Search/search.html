@@ -30,9 +30,9 @@
                     {{/esEach}}
                 {{/if}}
                 {{#if search_type_is "terms"}}
-                    {{#esEach id="search_input" index="terms"}}
+                    {{#each term_list}}
                         <li>Term: <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a></li>
-                    {{/esEach}}
+                    {{/each}}
                 {{/if}}
             </ul>
         </div>
@@ -48,9 +48,9 @@
                 {{/esEach}}
             {{/if}}
             {{#if search_type_is "terms"}}
-                {{#esEach id="search_input" index="terms"}}
+                {{#each term_list}}
                     <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a><br/>
-                {{/esEach}}
+                {{/each}}
             {{/if}}
         {{/unless}}
     </div>
