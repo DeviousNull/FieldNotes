@@ -46,11 +46,13 @@
                     {{#each categories}}
                         <div>
                             <a href="{{pathFor 'categoryPage'}}">{{category_name}}</a>
+                            {{#if is_removable_category this}}
                              <div name="editableInputField" hidden>
                                 <input class="form-control" id="name" disabled value="{{ category_name }}"/>
                                 <button class="btn btn-sm btn-danger deleteCategory" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
                                 <hr>
                             </div>
+                            {{/if}}
                            
                         </div>
                     {{/each}}
