@@ -2,6 +2,7 @@ Template.categoryPage.helpers({
     //Return the posts to be displayed
     'posts': function() {
         if (Template.instance().data.type == "category") {
+
             var post_array = Posts.find({
                 'categoryID': Template.instance().data.object._id,
             }, { 'reactive': false }).fetch();

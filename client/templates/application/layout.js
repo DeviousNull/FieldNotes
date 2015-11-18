@@ -21,6 +21,3 @@ Template.layout.events({
         }
     },
 });
-
-
-
