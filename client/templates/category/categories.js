@@ -2,6 +2,14 @@ Template.categories.helpers({
     //Return all the categories
     'categories': function(){
         return Categories.find();
+    },
+
+    'is_removable_category': function(_category) {
+        if (!_category) {
+            return false;
+        } else {
+            return !_category.isSystemCategory;
+        }
     }
 });
 
@@ -42,13 +50,7 @@ Template.categories.events({
 
     'click .deleteCategory': function(e){
         if(confirm("Are you sure you want to delete this category?")){
-            var cateID = this._id;
-            Tracker.autorun(function (computation) {
-            
-
-               Categories.remove(cateID);
-                computation.stop();
-            });
+            Meteor.call('delete-category', this._id);
         }
     }
 });
