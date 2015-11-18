@@ -400,11 +400,3 @@ Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
         ]
     };
 });
-
-// publish Users for admins
-Meteor.publish("userList", function(){
-    if(Roles.userIsInRole(this.userId, ["admin"]))
-        return Meteor.users.find();
-    return null;
-});
-

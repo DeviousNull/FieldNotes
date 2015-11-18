@@ -12,14 +12,3 @@ Accounts.onCreateUser(function(options, user) {
     
     return user;
 });
-
-Accounts.validateLoginAttempt(function(info){
-	var user=info.user;
-	
-	if(user && Roles.userIsInRole(user._id, ["banned"])){
-		throw new Meteor.Error("User banned", "You have been banned.");
-		return false;
-	}
-	else
-		return true;
-});
