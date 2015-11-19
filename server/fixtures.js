@@ -191,11 +191,11 @@ if(Posts.find().count() === 0){
                     userID : UsersData[get_rand(0,2)]['_id'],
                     createdAt: moment(),
                     modifiedAt: moment(),
-                    title : (function(){
-                        if(cat_id==level0) return ("Level 0 - "+(gen_lorem_ipsum(1,15,1)));
-                        else if(cat_id==level1) return ("Level 1 - "+(gen_lorem_ipsum(1,15,1)));
-                        else if(cat_id==level2) return ("Level 2 - "+(gen_lorem_ipsum(1,15,1)));
-                        else return (gen_lorem_ipsum(1,15,1));})(),
+                    title : (function(base){
+                        if(cat_id==level0) return ("Level 0 - "+base);
+                        else if(cat_id==level1) return ("Level 1 - "+base);
+                        else if(cat_id==level2) return ("Level 2 - "+base);
+                        else return base;})(gen_lorem_ipsum(1,15,1)),
                     pop_rating : pop_rate,
                     quality_rating : quality_rate,
                     numRaters : num_raters,
