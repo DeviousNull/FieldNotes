@@ -10,6 +10,9 @@ if(Meteor.users.find().count() === 0) {
     });
 
     Roles.setUserRoles(jeremy,'admin');
+    Houston._admins.insert({
+      user_id: jeremy
+    });
 
     var dillon = Accounts.createUser({
         username: 'dillon',
@@ -21,6 +24,9 @@ if(Meteor.users.find().count() === 0) {
     });
 
     Roles.setUserRoles(dillon,'admin');
+    Houston._admins.insert({
+      user_id: dillon
+    });
 
     var kendall = Accounts.createUser({
         username: 'kendall',
@@ -32,6 +38,9 @@ if(Meteor.users.find().count() === 0) {
     });
 
     Roles.setUserRoles(kendall,'admin');
+    Houston._admins.insert({
+      user_id: kendall
+    });
 
     var guest = Accounts.createUser({
         username: 'guest',
