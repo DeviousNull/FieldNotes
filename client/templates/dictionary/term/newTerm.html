@@ -29,23 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="title">List of Categories:</label>
-                </div>
-                <div class="col-md-9">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
-                            {{selectedCategory}}<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
-                            {{#each categories}}
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName">{{ category_name }}</a></li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        
 
                 <div class="row">
                  <div class="col-md-7">
@@ -54,7 +38,10 @@
                             This Definition Belong to : (insert selected category)
                         </div>
                         <div class="panel-body">
-                            <textarea name="cate" value=""></textarea>>
+                             <input class="form-control typeahead" name="cate" type="text"
+         placeholder="Search for categories"
+         autocomplete="off" spellcheck="off"
+         data-source="categories"/>
                         </div>
                     </div>
                 </div>
@@ -89,4 +76,8 @@
 
     </form>
 </template>
+<!-- Autocomplete typeahead. Might want to use meteor-jquery-rateit atmosphere package instead. -->
+
+
+
 

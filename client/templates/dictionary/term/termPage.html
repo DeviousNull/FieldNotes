@@ -65,7 +65,7 @@
                     {{/if}}
                 </div>
             </div>
-
+            
             <div class="row">
                 <div class="col-md-6">
                     <h6> This Definition Belong to : </h6>
@@ -85,10 +85,10 @@
             </div>
              
             </div>
-            <div class="row">
+           <!-- <div class="row">
                 <div class="col-md-5">
                     {{#if loggedIn}}
-                    <a class="btn btn-default" href="{{ pathFor 'submitCate'}}">Click here to add a new category</a>
+                    <a class="btn btn-default" href="{{ pathFor 'tagsPage'}}">{{tags}}</a>
                     {{/if}}
                 </div>
                 <div class="col-md-4">
@@ -98,7 +98,39 @@
                     <button class="btn btn-default" type="button" style="float: right" name="showAllCates">Show all Categories</button>
                     {{/if}}
                 </div>
+            </div>-->
+
+            <div>
+                <label>Belong to:</label>
+                {{#each tagss}}
+                {{#mathjax}}
+                <a href="{{pathFor 'tagsPage'}}">{{tags}}</a>
+                {{/mathjax}}
+                {{#if loggedIn}}
+                <span id="remove_tags" tags="{{tags}}" tags_id="{{_id}}" class="glyphicon glyphicon-remove" style="color:red"></span>
+                {{/if}}
+                &nbsp;
+                {{/each}}
+                {{#if loggedIn}}
+                <a id="add_tags">new category...</a>
+                {{/if}}
             </div>
+             <div>
+                {{#if add_tags_mode}}
+                <input class="form-control" type="text" id="tags_input" value=""/>
+                <button class="btn btn-default" id="cancel_tags" type="button">
+                Cancel
+                </button>
+                <button class="btn btn-default" id="submit_tags" type="button" style="float: right">
+                Submit Tags
+                </button>
+                {{/if}}
+            </div>            
+
+
+
+
+
             <div class="row"><p></p></div>
             
 

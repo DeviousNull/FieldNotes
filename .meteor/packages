@@ -7,7 +7,6 @@
 meteor-platform
 iron:router
 reactive-var
-ian:accounts-ui-bootstrap-3
 accounts-password
 alanning:roles
 sergeyt:typeahead
@@ -21,3 +20,5 @@ mrt:moment
 reywood:publish-composite
 barbatus:stars-rating
 mrt:mathjax
+ian:accounts-ui-bootstrap-3
+houston:admin
