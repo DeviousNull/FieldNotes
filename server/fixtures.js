@@ -89,7 +89,7 @@ if(Terms.find().count() === 0) {
         dictionaryID : Dictionaries.find().fetch()[2]['_id']
     });
  
-    var min_terms=50,max_terms=250;
+    var min_terms=50,max_terms=250,term_id;
     
     //50-250 terms per dictionary
     for(var a=0; a<4;a++)
@@ -110,6 +110,7 @@ if(Terms.find().count() === 0) {
         }
 }
 var TermsData = Terms.find().fetch();
+var level0, level1, level2;
 
 if(Categories.find().count() === 0) {
     Categories.insert({
@@ -142,6 +143,21 @@ if(Categories.find().count() === 0) {
         parentID : Categories.find().fetch()[3]['_id'],
         isSystemCategory: false,
     });
+    level0=Categories.insert({
+        category_name: 'Level_0',
+        parentID: undefined,
+        isSystemCategory: false,
+    });
+    level1=Categories.insert({
+        category_name: 'Level_1',
+        parentID: level0,
+        isSystemCategory: false,
+    });
+    level2=Categories.insert({
+        category_name: 'Level_2',
+        parentID: level1,
+        isSystemCategory: false,
+    });
 }
 if(Posts.find().count() === 0){
     var num_cats = 12;
@@ -161,14 +177,25 @@ if(Posts.find().count() === 0){
 
     for(var i=0;i<num_posts;i++){
         var num_raters = get_rand(1,1000),
-        pop_rate = get_rand(1,num_raters),
-        quality_rate = (Math.random()*(5));
+            pop_rate = get_rand(1,num_raters),
+            pop_rate_array = [ UsersData[get_rand(0,2)]['_id'] ],
+            quality_rate = (Math.random()*(5))
+            cat_id = Categories.find({ 'isSystemCategory': false }).fetch()[get_rand(0,num_cats)]['_id'];
+
+        for(var c=0;c<pop_rate;c++)
+            pop_rate_array.push(UsersData[get_rand(0,2)]['_id']);
+
+
 
         var j = Posts.insert({
                     userID : UsersData[get_rand(0,2)]['_id'],
                     createdAt: moment(),
                     modifiedAt: moment(),
-                    title : (gen_lorem_ipsum(1,15,1)),
+                    title : (function(base){
+                        if(cat_id==level0) return ("Level 0 - "+base);
+                        else if(cat_id==level1) return ("Level 1 - "+base);
+                        else if(cat_id==level2) return ("Level 2 - "+base);
+                        else return base;})(gen_lorem_ipsum(1,15,1)),
                     pop_rating : pop_rate,
                     quality_rating : quality_rate,
                     numRaters : num_raters,
@@ -177,13 +204,14 @@ if(Posts.find().count() === 0){
                     publisher : gen_lorem_ipsum(2,3,0),
                     publish_date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+get_rand(1800,2015),
 
-                    categoryID : Categories.find({ 'isSystemCategory': false }).fetch()[get_rand(0,num_cats)]['_id'],
+                    categoryID : cat_id,
                     definedTermIDArray : [ TermsData[0]['_id'] ],
                     usedTermIDArray : [ TermsData[1]['_id'] ],
-                    upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
+                    upvoteUserIDArray : pop_rate_array,
                     downvoteUserIDArray : [],
                     quality_ratings : [],
                 });
+
         
         var html=(i%5===0) ? '<strong>BOLD</strong> ' : '';
         
