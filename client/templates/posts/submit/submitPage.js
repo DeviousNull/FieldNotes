@@ -1,8 +1,7 @@
 Template.submitPage.onCreated(function() {
     this.previewData = new ReactiveVar;
     this.selectedCategory = new ReactiveVar;
-   
-
+    this.doiFieldStatus = new ReactiveVar("empty");
 });
 
 
@@ -78,6 +77,23 @@ Template.submitPage.events({
         Template.instance().previewData.set(converter.makeHtml(text));
     },
 
+    'blur [name=doi]': function(e) {
+        var doi = Template.instance().find("input[name=doi]").value;
+
+        if (!doi) {
+            Template.instance().doiFieldStatus.set("empty");
+        } else {
+            var status = Template.instance().doiFieldStatus;
+            status.set("checking");
+            Meteor.call('validate-doi', doi, function(error, result) {
+                if (error || !result) {
+                    status.set("invalid");
+                } else {
+                    status.set("valid");
+                }
+            });
+        }
+    },
 
 });
 
@@ -103,7 +119,10 @@ Template.submitPage.helpers({
             return 'Select a Category';
         }
     },
-  
+
+    'doi_validation_check': function(status) {
+        return (Template.instance().doiFieldStatus.get() === status);
+    },
 });
 Template.addTerm.onCreated(function() {
     this.previewDates = new ReactiveVar;
