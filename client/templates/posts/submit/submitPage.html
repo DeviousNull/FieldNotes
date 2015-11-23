@@ -59,7 +59,20 @@
                     <label for="title">DOI Link:</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" name="doi" value="" class="form-control required" placeholder="**insert DOI example here**">
+                    <div class="col-md-8">
+                        <input type="text" name="doi" value="" class="form-control required" placeholder="Enter DOI here...">
+                    </div>
+                    <div class="col-md-1">
+                        {{#if doi_validation_check "checking"}}
+                            <span class="glyphicon glyphicon-time"></span>
+                        {{/if}}
+                        {{#if doi_validation_check "valid"}}
+                            <span class="glyphicon glyphicon-ok"></span>
+                        {{/if}}
+                        {{#if doi_validation_check "invalid"}}
+                            <span class="glyphicon glyphicon-remove"></span>
+                        {{/if}}
+                    </div>
                 </div>
             </div>
 
