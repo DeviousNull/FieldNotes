@@ -1,6 +1,5 @@
 Template.submitPage.onCreated(function() {
     this.previewData = new ReactiveVar;
-    this.selectedCategory = new ReactiveVar;
     this.doiFieldStatus = new ReactiveVar("empty");
 });
 
@@ -14,10 +13,6 @@ Template.submitPage.events({
                 validated = false;
             }
         });
-        
-        if (!Template.instance().selectedCategory.get()) {
-            validated = false;
-        }
 
         if (!validated) {
 
@@ -37,7 +32,7 @@ Template.submitPage.events({
             author: Template.instance().$('[name=author]').val(),
             publish_date: Template.instance().$('[name=publish_date]').val(),
             publisher: Template.instance().$('[name=publisher]').val(),
-            categoryID: Template.instance().selectedCategory.get()._id,
+            categoryID: Template.instance().$('[name=cate]').val(),
             definedTermIDArray : [], //TODO(James): actually fill this array
             usedTermIDArray : [], //TODO(James): actually fill this array
             upvoteUserIDArray: [],
@@ -67,9 +62,6 @@ Template.submitPage.events({
         Router.go('postPage',post);
     },
 
-    'click .dropdown-menu li a': function(e) {
-        Template.instance().selectedCategory.set(this);
-    },
 
     'input [name=summary], change [name=summary], paste [name=summary], keyup [name=summary], mouseup [name=summary]': function(e) {
         var converter = new Showdown.converter();
@@ -111,19 +103,17 @@ Template.submitPage.helpers({
         return Template.instance().previewData.get();
     },
     
-    'selectedCategory': function() {
-        var cat = Template.instance().selectedCategory.get();
-        if (cat) {
-            return cat.category_name;
-        } else {
-            return 'Select a Category';
-        }
+    'categories': function(){
+        return Categories.find().fetch().map(function(it){ return it.category_name; });
     },
 
     'doi_validation_check': function(status) {
         return (Template.instance().doiFieldStatus.get() === status);
     },
 });
+Template.submitPage.rendered = function() {
+  Meteor.typeahead.inject();
+};
 Template.addTerm.onCreated(function() {
     this.previewDates = new ReactiveVar;
     this.selectedDictionary = new ReactiveVar;
