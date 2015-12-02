@@ -166,8 +166,9 @@ Template.addTerm.events({
         }
         // Insert new term
           var term = {
+
             term_name: Template.instance().$('[name=term_name]').val(),
-            dictionaryID: this._id
+            dictionaryID: Template.instance().selectedDictionary.get()._id
         };
         term._id = Terms.insert(term);
 
