@@ -19,19 +19,10 @@
                     <label for="title">Category:</label>
                 </div>
                 <div class="col-md-9">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
-                            {{selectedCategory}}<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
-                            {{#each categories}}
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName">{{ category_name }}</a></li>
-                            {{/each}}
-                        </ul>
-
-
-
-                    </div>
+                 <input class="form-control typeahead" name="cate" type="text"
+         placeholder="Search for categories"
+         autocomplete="off" spellcheck="off"
+         data-source="categories"/>
                 </div>
             </div>
 
@@ -59,17 +50,30 @@
                     <label for="title">DOI Link:</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" name="doi" value="" class="form-control required" placeholder="**insert DOI example here**">
+                    <div class="col-md-8">
+                        <input type="text" name="doi" value="" class="form-control required" placeholder="Enter DOI here...">
+                    </div>
+                    <div class="col-md-1">
+                        {{#if doi_validation_check "checking"}}
+                            <span class="glyphicon glyphicon-time"></span>
+                        {{/if}}
+                        {{#if doi_validation_check "valid"}}
+                            <span class="glyphicon glyphicon-ok"></span>
+                        {{/if}}
+                        {{#if doi_validation_check "invalid"}}
+                            <span class="glyphicon glyphicon-remove"></span>
+                        {{/if}}
+                    </div>
                 </div>
             </div>
 
             <div class="row"><p>&nbsp;</p></div>
 
             <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                     <label>Terms Used:</label>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9">
                     {{> search}}
                 </div>
             </div>
@@ -181,7 +185,7 @@
                     <label for="title">Dictionary</label>
                 </div>
                 <div class="col-md-9">
-
+                   
                   <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
                             {{selectedDictionary}}<span class="caret"></span>

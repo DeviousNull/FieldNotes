@@ -1,8 +1,6 @@
 Template.submitPage.onCreated(function() {
     this.previewData = new ReactiveVar;
-    this.selectedCategory = new ReactiveVar;
-   
-
+    this.doiFieldStatus = new ReactiveVar("empty");
 });
 
 
@@ -15,10 +13,6 @@ Template.submitPage.events({
                 validated = false;
             }
         });
-        
-        if (!Template.instance().selectedCategory.get()) {
-            validated = false;
-        }
 
         if (!validated) {
 
@@ -38,7 +32,7 @@ Template.submitPage.events({
             author: Template.instance().$('[name=author]').val(),
             publish_date: Template.instance().$('[name=publish_date]').val(),
             publisher: Template.instance().$('[name=publisher]').val(),
-            categoryID: Template.instance().selectedCategory.get()._id,
+            categoryID: Template.instance().$('[name=cate]').val(),
             definedTermIDArray : [], //TODO(James): actually fill this array
             usedTermIDArray : [], //TODO(James): actually fill this array
             upvoteUserIDArray: [],
@@ -68,9 +62,6 @@ Template.submitPage.events({
         Router.go('postPage',post);
     },
 
-    'click .dropdown-menu li a': function(e) {
-        Template.instance().selectedCategory.set(this);
-    },
 
     'input [name=summary], change [name=summary], paste [name=summary], keyup [name=summary], mouseup [name=summary]': function(e) {
         var converter = new Showdown.converter();
@@ -78,6 +69,23 @@ Template.submitPage.events({
         Template.instance().previewData.set(converter.makeHtml(text));
     },
 
+    'blur [name=doi]': function(e) {
+        var doi = Template.instance().find("input[name=doi]").value;
+
+        if (!doi) {
+            Template.instance().doiFieldStatus.set("empty");
+        } else {
+            var status = Template.instance().doiFieldStatus;
+            status.set("checking");
+            Meteor.call('validate-doi', doi, function(error, result) {
+                if (error || !result) {
+                    status.set("invalid");
+                } else {
+                    status.set("valid");
+                }
+            });
+        }
+    },
 
 });
 
@@ -95,16 +103,17 @@ Template.submitPage.helpers({
         return Template.instance().previewData.get();
     },
     
-    'selectedCategory': function() {
-        var cat = Template.instance().selectedCategory.get();
-        if (cat) {
-            return cat.category_name;
-        } else {
-            return 'Select a Category';
-        }
+    'categories': function(){
+        return Categories.find().fetch().map(function(it){ return it.category_name; });
     },
-  
+
+    'doi_validation_check': function(status) {
+        return (Template.instance().doiFieldStatus.get() === status);
+    },
 });
+Template.submitPage.rendered = function() {
+  Meteor.typeahead.inject();
+};
 Template.addTerm.onCreated(function() {
     this.previewDates = new ReactiveVar;
     this.selectedDictionary = new ReactiveVar;
@@ -157,8 +166,9 @@ Template.addTerm.events({
         }
         // Insert new term
           var term = {
+
             term_name: Template.instance().$('[name=term_name]').val(),
-            dictionaryID: this._id
+            dictionaryID: Template.instance().selectedDictionary.get()._id
         };
         term._id = Terms.insert(term);
 
