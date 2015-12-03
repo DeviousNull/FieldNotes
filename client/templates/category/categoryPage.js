@@ -3,9 +3,7 @@ Template.categoryPage.helpers({
     'posts': function() {
         if (Template.instance().data.type == "category") {
 
-            var post_array = Posts.find({
-                'categoryID': Template.instance().data.object._id,
-            }, { 'reactive': false }).fetch();
+            var post_array = Posts.find().fetch();
 
             post_array.sort(function(a, b) {
                 var a_score = (a.upvoteUserIDArray.length - a.downvoteUserIDArray.length);

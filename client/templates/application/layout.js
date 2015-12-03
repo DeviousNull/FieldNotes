@@ -1,23 +1,20 @@
 
-Template.layout.helpers({
+Template.layout.helpers({  
+  'categories': function(){
+    parent = undefined;
     
-    'categories': function(){
-    	//Return all level 0 categories
-    //    return Categories.find({parentID: 0})
+    if(Template.instance().data)
+      if(Template.instance().data.type == "category" && Template.instance().data.object['parentID']){
+        parent = Template.instance().data.object['_id']
+      }
+  	
+    //Return all level 0 categories
+    //return Categories.find({parentID: undefined});
     return Categories.find();
-    }
+  },
 
-});
-
-Template.layout.events({
-	'keypress #siteTitle': function(e){
-        if(e.which === 13) {
-    		$('#siteTitle').attr('contenteditable', 'false');
-  			var newTitle = $('#siteTitle').html();
-  			alert("New Title: "+newTitle);
-  			/*
-			Update Site Title with newTitle whereever stored
-  			*/
-        }
-    },
+  'isCategory': function(){
+     return false;
+     //(Template.instance().data && Template.instance().data.type == "category" && Template.instance().data.object['parentID']);
+  }
 });

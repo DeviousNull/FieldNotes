@@ -52,22 +52,25 @@
         </div>
     </div> <!-- /Nav bar -->
     <body>
+
+      
+  
    <div class="jumbotron" id="jumbo" > <!-- JUMBO TRON -->
         
         <p>
         <div class="row">
         <div class ="col-sm-12">
         <div class="content">
+
+
          <ul class="nav nav-tabs nav-justified">
-          <button class="scroller scroller-left" type="button" style="float: left">
-                    <i class="glyphicon glyphicon-chevron-left"></i>
-                </button>
-             
              
             {{#each categories}}
-                 
+                  {{#if isCategory}}
+                  <li role="presentation" style="width: auto"><a href="{{pathFor 'subCategoryPage'}}">{{category_name}}</a></li>
+                  {{else}}
                     <li role="presentation" style="width: auto"><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
-                
+                  {{/if}}
                 {{/each}}
           
              <li class="scroller scroller-right" type="button">
@@ -81,10 +84,8 @@
  </div>
  </div>
         </p>
-
-       
     </div> <!-- /JUMBO TRON -->
-    
+    {{> breadcrumbs}}
     </body>
     <section>
         <div class="container">
@@ -93,3 +94,16 @@
     </section>
 </template>
 
+<template name="breadcrumbs">
+  <ol class="breadcrumb">
+    {{#each Breadcrumb}}
+      <li>
+        {{#if showLink}}
+          <a href="{{url}}">{{title}}</a>
+        {{else}}
+          {{title}}
+        {{/if}}
+      </li>
+    {{/each}}
+  </ol>
+</template>
