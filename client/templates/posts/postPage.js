@@ -27,18 +27,14 @@ Template.postPage.events({
         Template.instance().editMode.set(false);
 
         //Update data. For fields that aren't updated, grab their old value
-        var updatedPost = {
-            $set : {
-                'doi': Template.instance().$('[id=doi]').val(),
-                'author': Template.instance().$('[id=author]').val(),
-                'publisher': Template.instance().$('[id=publisher]').val(),
-                'publish_date': Template.instance().$('[id=publish_date]').val(),
-                'modifiedAt': moment(),
-            }
+        var update = {
+            'doi': Template.instance().$('[id=doi]').val(),
+            'author': Template.instance().$('[id=author]').val(),
+            'publisher': Template.instance().$('[id=publisher]').val(),
+            'publish_date': Template.instance().$('[id=publish_date]').val(),
         };
 
-        //Update
-        Posts.update(this._id, updatedPost);
+        Meteor.call('update-post', Template.instance().data._id, update);
     },
 
     'click #user-rating': function(e) {
