@@ -101,14 +101,14 @@ Template.postPage.events({
             return;
         }
 
-        Posts.update(this._id, {
-            '$pull': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        var vote;
+        if (this.upvoteUserIDArray.indexOf(Meteor.user()._id) !== -1) {
+            vote = 0;
+        } else {
+            vote = 1;
+        }
+
+        Meteor.call('set-post-influence-rating', Template.instance().data._id, vote);
     },
 
     'click #downvote-button': function(e) {
@@ -116,14 +116,14 @@ Template.postPage.events({
             return;
         }
 
-        Posts.update(this._id, {
-            '$pull': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        var vote;
+        if (this.downvoteUserIDArray.indexOf(Meteor.user()._id) !== -1) {
+            vote = 0;
+        } else {
+            vote = -1;
+        }
+
+        Meteor.call('set-post-influence-rating', Template.instance().data._id, vote);
     },
 
 });
