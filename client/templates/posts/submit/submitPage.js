@@ -25,9 +25,7 @@ Template.submitPage.events({
             createdAt: moment(),
             modifiedAt: moment(),
             title: Template.instance().$('[name=title]').val(),
-            pop_rating: 0,
-            quality_rating: 0,
-            numRaters : 0,
+            quality_rating: {},
             doi: Template.instance().$('[name=doi]').val(),
             author: Template.instance().$('[name=author]').val(),
             publish_date: Template.instance().$('[name=publish_date]').val(),
@@ -35,14 +33,13 @@ Template.submitPage.events({
             categoryID: Template.instance().$('[name=cate]').val(),
             definedTermIDArray : [], //TODO(James): actually fill this array
             usedTermIDArray : [], //TODO(James): actually fill this array
-            upvoteUserIDArray: [],
-            downvoteUserIDArray: [],
+            influence_ratings: {},
         };
 
         post._id = Posts.insert(post);
 
         //Insert the new summary
-        var summary = {
+        /*var summary = {
             userID: Meteor.user()._id,
             postID: post._id,
             text: Template.instance().$('[name=summary]').val(),
@@ -52,7 +49,7 @@ Template.submitPage.events({
             quality_ratings : [],
         };
 
-        Summaries.insert(summary);
+        Summaries.insert(summary);*/
 
         //Find any terms that already exist
         var terms_defined = Template.instance().$('[name=terms_used]');

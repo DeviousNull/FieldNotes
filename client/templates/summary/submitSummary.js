@@ -8,16 +8,7 @@ Template.submitSummary.events({
     */
     'click input[name=submitSummaryButton]': function(e) {
         //Insert the new summary
-        var summary = {
-            userID: Meteor.user()._id,
-            postID: this._id,
-            text: Template.instance().$('textarea[name=summary]').val(),
-            isOfficialAbstract: Template.instance().$('input[name=is-official-abstract]').is(":checked"),
-            upvoteUserIDArray: [],
-            downvoteUserIDArray: [],
-        };
-
-        Summaries.insert(summary);
+        Meteor.call('add-post-summary', Template.instance().data._id, Template.instance().$('textarea[name=summary]').val(), Template.instance().$('input[name=is-official-abstract]').is(":checked"));
         
         //Redirect to the postpage  
         Router.go('postPage', this);

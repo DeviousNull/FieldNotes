@@ -19,11 +19,6 @@ Meteor.publish('listAllCategories', function(){
     return Categories.find({});
 });
 
-//Publish all the summaries for summary lists
-Meteor.publish('listAllSummaries', function(){
-    return Summaries.find({});
-});
-
 //Publish the list of searchable terms
 Meteor.publish('listAllTerms', function(){
     return Terms.find({});
@@ -151,11 +146,6 @@ Meteor.publishComposite('retrievePostsList', { // All Posts
         return Posts.find({});
     },
     'children': [
-        { // Post Top Summary
-            'find': function(post) {
-                return Summaries.find({'postID': post._id}, {'sort': {'quality_rating': -1}, 'limit':1 });
-            }
-        },
         { // Poster Username
             'find': function(post) {
                 return Meteor.users.find(post.userID, {'fields': {'username':1}});
@@ -177,45 +167,6 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                     return Meteor.users.find(post.userID, {'fields': {username :1}})
                 }
             },
-            { // Post Summaries
-                'find': function(post) {
-                    return Summaries.find({postID: _postID});
-                },
-                'children': [
-                    { // Post Summary Submitter
-                        'find': function(summary, post) {
-                            return Meteor.users.find(summary.userID, {'fields': {username :1}})
-                        }
-                    },
-                ]
-            },
-            { // Post Tags
-                'find': function(post) {
-                    return Post_tags.find({postID: _postID});
-                },
-            },
-            { // Post Comments
-                'find': function(post) {
-                    return Comments.find({'postID': _postID});
-                },
-                'children': [
-                    { // Post Comment Submitter
-                        'find': function(comment, post) {
-                            return Meteor.users.find(comment.userID, {'fields': {username :1}})
-                        }
-                    },
-                    { // Post Comment Influence (Public)
-                        'find': function(comment, post) {
-                            return Comment_ratings.find({'commentID': comment._id}, {'fields': {userID :0}});
-                        }
-                    },
-                    { // Post Comment Influence (Private)
-                        'find': function(comment, post) {
-                            return Comment_ratings.find({'commentID': comment._id, 'userID': this.userId});
-                        }
-                    }
-                ]
-            },
             { // Post Used Terms
                 'find': function(post) {
                     return Terms.find({'_id': {'$in': post.usedTermIDArray}});
@@ -225,7 +176,12 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                 'find': function(post) {
                     return Terms.find({'_id': {'$in': post.definedTermIDArray}});
                 }
-            }
+            },
+            { // Post Comment Submitters
+                'find': function(post) {
+                    return Meteor.users.find({}, {'fields': {username :1}}) // TODO(James): Don't send every username to the client.
+                }
+            },
         ]
     };
 });
@@ -269,11 +225,6 @@ Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
                             return Meteor.users.find(post.userID, {'fields': {username :1}});
                         },
                     },
-                    { // Category Post Top Summary
-                        'find': function(post, category) {
-                            return Summaries.find({'postID': post._id});
-                        },
-                    },
                 ]
             }
         ]
@@ -300,28 +251,16 @@ Meteor.publishComposite('retrieveTagsPage', function(_tags) {
 // All documents needed to render a tagPage template
 Meteor.publishComposite('retrieveTagPage', function(_tag) {
     check(_tag, String);
-    return { // Tags
+    return { // Posts
         'find': function() {
-            return Post_tags.find({ 'tag': _tag });
+            return Posts.find({ 'tags': _tag });
         },
         'children': [
-            { // Tag Posts
-                'find': function(post_tag) {
-                    return Posts.find({'_id': post_tag.postID});
+            { // Post Submitter
+                'find': function(post) {
+                    return Meteor.users.find(post.userID, {'fields': {username :1}});
                 },
-                'children': [
-                    { // Tag Post Submitter
-                        'find': function(post, post_tag) {
-                            return Meteor.users.find(post.userID, {'fields': {username :1}});
-                        },
-                    },
-                    { // Tag Post Top Summary
-                        'find': function(post, post_tag) {
-                            return Summaries.find({'postID': post._id});
-                        },
-                    }
-                ]
-            }
+            },
         ]
     };
 });
@@ -393,11 +332,6 @@ Meteor.publishComposite('retrieveSummaryList', { // All Posts
                 return Meteor.users.find(post.userID, {'fields': {'username': 1}});
             }
         },
-        { // Post Summaries
-            'find': function(post) {
-                return Summaries.find({'postID': post._id});
-            },
-        }
     ]
 });
 
@@ -414,11 +348,6 @@ Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
                     return Meteor.users.find(post.userID, {'fields': {'username' : 1}});
                 }
             },
-            { // Post Summaries
-                'find': function(post) {
-                    return Summaries.find({'postID': post._id});
-                },
-            }
         ]
     };
 });

@@ -27,31 +27,20 @@ Template.postPage.events({
         Template.instance().editMode.set(false);
 
         //Update data. For fields that aren't updated, grab their old value
-        var updatedPost = {
-            $set : {
-                'doi': Template.instance().$('[id=doi]').val(),
-                'author': Template.instance().$('[id=author]').val(),
-                'publisher': Template.instance().$('[id=publisher]').val(),
-                'publish_date': Template.instance().$('[id=publish_date]').val(),
-                'modifiedAt': moment(),
-            }
+        var update = {
+            'doi': Template.instance().$('[id=doi]').val(),
+            'author': Template.instance().$('[id=author]').val(),
+            'publisher': Template.instance().$('[id=publisher]').val(),
+            'publish_date': Template.instance().$('[id=publish_date]').val(),
         };
 
-        //Update
-        Posts.update(this._id, updatedPost);
+        Meteor.call('update-post', Template.instance().data._id, update);
     },
 
     'click #user-rating': function(e) {
         var qratings = Template.instance().data.quality_ratings;
-        var user_rating = -1;
-        for (var i = 0; i < qratings.length; i++) {
-            if (qratings[i].userID === Meteor.userId()) {
-                user_rating = qratings[i].rating;
-                break;
-            }
-        }
 
-        if (user_rating === Template.instance().$('#user-rating').data('userrating')) {
+        if (Meteor.user()._id in qratings && qratings[Meteor.user()._id] === Template.instance().$('#user-rating').data('userrating')) {
             Meteor.call('set-post-quality-rating', Template.instance().data._id, -1);
         } else {
             Meteor.call('set-post-quality-rating', Template.instance().data._id, Template.instance().$('#user-rating').data('userrating'));
@@ -63,7 +52,7 @@ Template.postPage.events({
             return;
         }
 
-        Post_tags.remove(e.target.attributes['tag_id'].value);
+        Meteor.call('remove-tag-from-paper', Template.instance().data._id, e.target.attributes['tag'].value);
     },
 
     'click #add_tag': function(e) {
@@ -77,21 +66,13 @@ Template.postPage.events({
     'click #submit_tag': function(e) {
         var new_tag = Template.instance().$('#tag_input').val();
 
-        var existing_tag = Post_tags.findOne({
-            'postID': Template.instance().data._id,
-            'tag': new_tag,
-        });
-
-        if (existing_tag) {
+        if (Template.instance().data.tags.indexOf(new_tag) !== -1) {
             alert("This paper already has that tag.");
             return;
         }
 
         if (new_tag) {
-            Post_tags.insert({
-                'postID': Template.instance().data._id,
-                'tag': new_tag,
-            });
+            Meteor.call('add-tag-to-paper', Template.instance().data._id, new_tag);
         }
 
         Template.instance().addTagMode.set(false);
@@ -101,14 +82,14 @@ Template.postPage.events({
             return;
         }
 
-        Posts.update(this._id, {
-            '$pull': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        var vote;
+        if (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === 1) {
+            vote = 0;
+        } else {
+            vote = 1;
+        }
+
+        Meteor.call('set-post-influence-rating', Template.instance().data._id, vote);
     },
 
     'click #downvote-button': function(e) {
@@ -116,14 +97,14 @@ Template.postPage.events({
             return;
         }
 
-        Posts.update(this._id, {
-            '$pull': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        var vote;
+        if (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === -1) {
+            vote = 0;
+        } else {
+            vote = -1;
+        }
+
+        Meteor.call('set-post-influence-rating', Template.instance().data._id, vote);
     },
 
 });
@@ -134,15 +115,69 @@ Template.postPage.helpers({
     },
 
     'allSummaries': function() {
-        return Summaries.find({postID: this._id});
+        var summaries = [];
+
+        this.summaries.forEach(function(summary) {
+            var copy = {
+                'postID': Template.instance().data._id,
+                'userID': summary.userID,
+                'isOfficialAbstract': summary.isOfficialAbstract,
+                'createdAt': summary.createdAt,
+                'text': summary.text,
+                'ratings': summary.ratings,
+            };
+
+            summaries.push(copy);
+        });
+
+        return summaries;
     },
     
     'topSummary': function() {
-        return Summaries.find({postID: this._id}, {sort: {quality_rating: -1}, limit: 1});
+        var summaries = this.summaries;
+
+        var top_summary = false;
+        var top_rating = Number.NEGATIVE_INFINITY;
+
+        summaries.forEach(function(summary) {
+            var rating = 0;
+            for (var prop in summary.ratings) {
+                rating += summary.ratings[prop];
+            }
+
+            if (rating > top_rating) {
+                top_summary = summary;
+                top_rating = rating;
+            }
+        });
+
+        var copy = {
+            'postID': Template.instance().data._id,
+            'userID': top_summary.userID,
+            'isOfficialAbstract': top_summary.isOfficialAbstract,
+            'createdAt': top_summary.createdAt,
+            'text': top_summary.text,
+            'ratings': top_summary.ratings,
+        };
+
+        return copy;
     },
 
     'comments': function() {
-        return Comments.find({postID: this._id});
+        var comments = [];
+
+        Template.instance().data.comments.forEach(function(comment) {
+            var copy = {
+              'postID': Template.instance().data._id,
+              'userID': comment.userID,
+              'createdAt': comment.createdAt,
+              'text': comment.text,
+              'ratings': comment.ratings,
+            };
+            comments.push(copy);
+        });
+
+        return comments;
     },
 
     //Return all the terms used in this paper
@@ -167,12 +202,18 @@ Template.postPage.helpers({
         var qratings = Template.instance().data.quality_ratings;
 
         var total = 0;
+        var count = 0;
 
-        for (var i = 0; i < qratings.length; i++) {
-            total += qratings[i].rating;
+        for (var prop in qratings) {
+            total += qratings[prop];
+            count++;
         }
 
-        return (total / qratings.length);
+        if (count > 0) {
+            return (total / count);
+        } else {
+            return -1;
+        }
     },
 
     'user_quality_rating': function() {
@@ -181,16 +222,22 @@ Template.postPage.helpers({
         } else {
             var qratings = Template.instance().data.quality_ratings;
 
-            for (var i = 0; i < qratings.length; i++) {
-                if (qratings[i].userID === Meteor.userId()) {
-                    return qratings[i].rating;
-                }
+            if (Meteor.user()._id in qratings) {
+                return qratings[Meteor.user()._id];
+            } else {
+                return -1;
             }
         }
     },
 
     'tags': function() {
-        return Post_tags.find({ 'postID': Template.instance().data._id });
+        return Template.instance().data.tags;
+    },
+
+    'tag_to_object': function() {
+        return {
+            'tag': this,
+        };
     },
 
     'add_tag_mode': function() {
@@ -201,7 +248,7 @@ Template.postPage.helpers({
             return false
         }
 
-        return (this.upvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+        return (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === 1);
     },
 
     'down_pressed': function() {
@@ -209,10 +256,16 @@ Template.postPage.helpers({
             return false
         }
 
-        return (this.downvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+        return (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === -1);
     },
 
     'influence': function() {
-        return (this.upvoteUserIDArray.length - this.downvoteUserIDArray.length);
+        var influence = 0;
+
+        for (var prop in this.influence_ratings) {
+            influence += this.influence_ratings[prop];
+        }
+
+        return influence;
     }
 });

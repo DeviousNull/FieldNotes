@@ -5,102 +5,72 @@ Template.commentItem.helpers({
     },
 
     'upPressed': function() {
-        var rating = Comment_ratings.findOne({
-            'userID': Meteor.user()._id,
-            'commentID': this._id,
-        });
-
-        if (!rating) {
-            return false;
-        } else {
-            return rating.isUpvote;
-        }
+        return (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === 1);
     },
 
     'downPressed': function() {
-        var rating = Comment_ratings.findOne({
-            'userID': Meteor.user()._id,
-            'commentID': this._id,
-        });
-
-        if (!rating) {
-            return false;
-        } else {
-            return !rating.isUpvote;
-        }
+        return (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === -1);
     },
     
     'rating': function() {
-        var upvotes = Comment_ratings.find({
-            'commentID': this._id,
-            'isUpvote': true,
-        }).count();
+        var rating = 0;
         
-        var downvotes = Comment_ratings.find({
-            'commentID': this._id,
-            'isUpvote': false,
-        }).count();
+        for (var prop in this.ratings) {
+            rating += this.ratings[prop];
+        }
         
-        return (upvotes - downvotes);
+        return rating;
     },
 });
 
 Template.commentItem.events({
     //Click event for the upvote button on a comment
     'click .upArrowButton': function(e){
-        var rating = Comment_ratings.findOne({
-            'userID': Meteor.user()._id,
-            'commentID': this._id,
-        });
+        var key = {
+            'userID': this.userID,
+            'text': this.text,
+            'createdAt': this.createdAt,
+        };
 
-        if (rating) {
-            if (rating.isUpvote) {
-                Comment_ratings.remove(rating._id);
-            } else {
-                Comment_ratings.update(rating._id, {
-                    '$set': {
-                        'isUpvote': true,
-                    }
-                });
-            }
+        var new_rating;
+
+        if (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === 1) {
+            new_rating = 0;
         } else {
-            Comment_ratings.insert({
-                'userID': Meteor.user()._id,
-                'commentID': this._id,
-                'isUpvote': true,
-            });
+            new_rating = 1;
         }
+
+        Meteor.call('set-post-comment-rating', this.postID, key, new_rating);
     },
     //Click event for downvote button
     'click .downArrowButton': function(e){
-        var rating = Comment_ratings.findOne({
-            'userID': Meteor.user()._id,
-            'commentID': this._id,
-        });
+        var key = {
+            'userID': this.userID,
+            'text': this.text,
+            'createdAt': this.createdAt,
+        };
 
-        if (rating) {
-            if (rating.isUpvote) {
-                Comment_ratings.update(rating._id, {
-                    '$set': {
-                        'isUpvote': false,
-                    }
-                });
-            } else {
-                Comment_ratings.remove(rating._id);
-            }
+        var new_rating;
+
+        if (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === -1) {
+            new_rating = 0;
         } else {
-            Comment_ratings.insert({
-                'userID': Meteor.user()._id,
-                'commentID': this._id,
-                'isUpvote': false,
-            });
+            new_rating = -1;
         }
+
+        Meteor.call('set-post-comment-rating', this.postID, key, new_rating);
     },
 
     //Click event for delete button
     'click .deleteComment': function(e){
+        var key = {
+            'userID': this.userID,
+            'text': this.text,
+            'createdAt': this.createdAt,
+        };
+
         if (confirm("Are you sure you want to delete this comment?")){
-            Comments.remove(this._id);
+            Meteor.call('remove-post-comment', this.postID, key);
         }
     },
 });

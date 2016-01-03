@@ -176,29 +176,49 @@ if(Posts.find().count() === 0){
     var num_posts = 30;
 
     for(var i=0;i<num_posts;i++){
-        var num_raters = get_rand(1,1000),
-            pop_rate = get_rand(1,num_raters),
-            pop_rate_array = [ UsersData[get_rand(0,2)]['_id'] ],
-            quality_rate = (Math.random()*(5))
+        var pop_rate = get_rand(0,UsersData.length),
+            pop_rate_map = {},
+            post_summaries = [],
+            post_comments = [],
             cat_id = Categories.find({ 'isSystemCategory': false }).fetch()[get_rand(0,num_cats)]['_id'];
 
-        for(var c=0;c<pop_rate;c++)
-            pop_rate_array.push(UsersData[get_rand(0,2)]['_id']);
+        for(var c=0;c<pop_rate;c++) {
+            pop_rate_map[UsersData[c]['_id']] = 1;
+        }
 
+        for(var k=0,n=get_rand(1,10);k<n;k++){
+            post_comments.push({
+                        userID : UsersData[get_rand(0,2)]['_id'],
+                        text : gen_lorem_ipsum(1,30,1),
+                        createdAt : new Date().toUTCString(),
+                        ratings : {},
+                    });
+        }
+        
+        var html=(i%5===0) ? '<strong>BOLD</strong> ' : '';
+        
+        for(var k=0,n=get_rand(1,10);k<n;k++){
+            var sum_rate = (Math.random()*(5)),
+            com_rate = get_rand(0,10);
 
+            post_summaries.push({
+                        userID : UsersData[get_rand(0,2)]['_id'],
+                        text : html+gen_lorem_ipsum(10,150,1),
+                        isOfficialAbstract: false,
+                        createdAt: new Date().toUTCString(),
+                        ratings : {},
+                    });
+        }
 
         var j = Posts.insert({
                     userID : UsersData[get_rand(0,2)]['_id'],
-                    createdAt: moment(),
-                    modifiedAt: moment(),
+                    createdAt: new Date().toUTCString(),
+                    modifiedAt: new Date().toUTCString(),
                     title : (function(base){
                         if(cat_id==level0) return ("Level 0 - "+base);
                         else if(cat_id==level1) return ("Level 1 - "+base);
                         else if(cat_id==level2) return ("Level 2 - "+base);
                         else return base;})(gen_lorem_ipsum(1,15,1)),
-                    pop_rating : pop_rate,
-                    quality_rating : quality_rate,
-                    numRaters : num_raters,
                     doi : '10.1016/j.iheduc.2008.03.001' ,
                     author : gen_lorem_ipsum(2,3,0),
                     publisher : gen_lorem_ipsum(2,3,0),
@@ -207,199 +227,14 @@ if(Posts.find().count() === 0){
                     categoryID : cat_id,
                     definedTermIDArray : [ TermsData[0]['_id'] ],
                     usedTermIDArray : [ TermsData[1]['_id'] ],
-                    upvoteUserIDArray : pop_rate_array,
-                    downvoteUserIDArray : [],
-                    quality_ratings : [],
+                    influence_ratings : pop_rate_map,
+                    quality_ratings : {},
+                    comments : post_comments,
+                    summaries : post_summaries,
+                    tags : [],
                 });
-
-        
-        var html=(i%5===0) ? '<strong>BOLD</strong> ' : '';
-        
-        for(var k=0,n=get_rand(1,10);k<n;k++){
-            var sum_rate = (Math.random()*(5)),
-            com_rate = get_rand(0,10);
-
-            var c_id = Comments.insert({
-                        userID : UsersData[get_rand(0,2)]['_id'],
-                        parentID : '0', //No parent
-                        postID : j,
-                        text : gen_lorem_ipsum(1,30,1),
-                        date : get_rand(1,12)+"/"+get_rand(1,29)+"/"+2015
-                    });
-
-            var s_id = Summaries.insert({
-                        userID : UsersData[get_rand(0,2)]['_id'],
-                        postID : j,
-                        text : html+gen_lorem_ipsum(10,150,1),
-                        isOfficialAbstract: false,
-                        upvoteUserIDArray : [ UsersData[get_rand(0,2)]['_id'] ],
-                        downvoteUserIDArray : [],
-                    });
-
-            for(var l=0;l<com_rate;l++)
-                Comment_ratings.insert({
-                    'userID': UsersData[get_rand(0,2)]['_id'],
-                    'commentID': c_id,
-                    'isUpvote': true,
-                });
-        }
     }
 }
-/*
-    Posts.insert({
-        userID : UsersData[0]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "This and That, Algorithms united. $(X^y)$",
-        pop_rating : 29,
-        quality_rating : 4,
-        numRaters : 20,
-        doi : '12423' ,
-        author : "Thom Yorke",
-        publisher : "Kendrick Lamar",
-        publish_date : "7/4/2010",
-        categoryID : Categories.find().fetch()[0]['_id'],
-        definedTermIDArray : [ TermsData[0]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[1]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "Why Discreet Math changed my life.",
-        pop_rating : 67,
-        quality_rating : 3,
-        numRaters : 15,
-        doi : '6789' ,
-        author : "Elon Musk",
-        publisher : "Tree House",
-        publish_date : "7/5/2010",
-        categoryID : Categories.find().fetch()[4]['_id'],
-        definedTermIDArray : [ TermsData[1]['_id'], TermsData[2]['_id'] ],
-        usedTermIDArray : [ TermsData[2]['_id'] ]
-    });
-    Posts.insert({
-        userID : UsersData[2]['_id'],
-        createdAt: moment(),
-        modifiedAt: moment(),
-        title : "GLICKO: made easy.",
-        pop_rating : 29,
-        quality_rating : 4,
-        numRaters : 10,
-        doi : '12423' ,
-        author : "Jane Goodall",
-        publisher : "Kony 2012",
-        publish_date : "7/2/2010",
-        categoryID : Categories.find().fetch()[1]['_id'],
-        definedTermIDArray : [ TermsData[3]['_id'] ],
-        usedTermIDArray : [ TermsData[1]['_id'] ]
-    });
-    
-
-    var PostsData = Posts.find().fetch();
-
-    Comments.insert({
-        userID : UsersData[0]['_id'],
-        parentID : '0', //No parent
-        postID : PostsData[0]['_id'],
-        text : "This is the coolest paper ever. amirite? $(X^y)$",
-        date : "3/2/2015"
-    });
-    Comments.insert({
-        userID : UsersData[1]['_id'],
-        parentID : Comments.find().fetch()[0]['_id'],
-        postID : PostsData[0]['_id'],
-        text : "N0pe. You think these sources are scholarly?",
-        date : "3/2/2015"
-    });
-    Comments.insert({
-        userID : UsersData[0]['_id'],
-        parentID : Comments.find().fetch()[1]['_id'],
-        postID : PostsData[0]['_id'],
-        text : "Science has put Wikipedia to the test, it is the irrefutable all-source. You can't escape it.",
-        date : "3/2/2015"
-    });
-    Comments.insert({
-        userID : UsersData[2]['_id'],
-        parentID : Comments.find().fetch()[0]['_id'],
-        postID : PostsData[0]['_id'],
-        text : "You are right. Hail Wiki.",
-        date : "3/2/2015"
-    });
-    Comments.insert({
-        userID : UsersData[2]['_id'],
-        parentID : '0', //No parent
-        postID : PostsData[0]['_id'],
-        text : "This is what I've been looking for.",
-        date : "3/3/2015"
-    });
-
-    var CommentsData = Comments.find().fetch();
-
-    Summaries.insert({
-        userID : UsersData[0]['_id'],
-        postID : PostsData[0]['_id'],
-        text : "In general, this paper explains the connection between this and that.",
-        quality_rating : 3,
-        numRaters : 2
-    });
-    Summaries.insert({
-        userID : UsersData[1]['_id'],
-        postID : PostsData[0]['_id'],
-        text : "3 Dimensional Shadow: A shadow cast by a 4 dimensional object. $(X^y)$",
-        quality_rating : 4.3,
-        numRaters : 4
-    });
-    Summaries.insert({
-        userID : UsersData[2]['_id'],
-        postID : PostsData[1]['_id'],
-        text: "THIS IS A SUMMARY.",
-        quality_rating : 1,
-        numRaters : 6
-    });
-    var SummaryData = Summaries.find().fetch();
-}
-
-if(Definitions.find().count() === 0) {
-    Definitions.insert({
-        termID : TermsData[0]['_id'],
-        userID : UsersData[0]['_id'],
-        text : "A tree data structure in which each node has at most two children, which are referred to as the left child and the right child. $(X^y)$",
-        quality_rating : 5,
-        numRaters : 10
-    });
-    Definitions.insert({
-        termID : TermsData[0]['_id'],
-        userID : UsersData[2]['_id'],
-        text : "1s and 0s that grow trunks ad leaves",
-        quality_rating : 1,
-        numRaters : 5
-    });
-    Definitions.insert({
-        termID : TermsData[1]['_id'],
-        userID : UsersData[1]['_id'],
-        text : 'Something used to hold a value.',
-        quality_rating : 5,
-        numRaters : 2
-    });
-    Definitions.insert({
-        termID : TermsData[2]['_id'],
-        userID : UsersData[0]['_id'],
-        text : 'A form of indirect proof, that establishes the truth or validity of a proposition by showing that the proposition\'s being false would imply a contradiction.',
-        quality_rating : 4,
-        numRaters : 6
-    });
-    Definitions.insert({
-        termID : TermsData[3]['_id'],
-        userID : UsersData[0]['_id'],
-        text : '+1',
-        quality_rating : 3,
-        numRaters : 1
-    });
-}
-
-var DefinitionData = Definitions.find().fetch();
-*/
 
 if(Adminlabels.find().count() === 0) {
     Adminlabels.insert({

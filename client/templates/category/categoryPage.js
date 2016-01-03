@@ -6,28 +6,36 @@ Template.categoryPage.helpers({
             var post_array = Posts.find().fetch();
 
             post_array.sort(function(a, b) {
-                var a_score = (a.upvoteUserIDArray.length - a.downvoteUserIDArray.length);
-                var b_score = (b.upvoteUserIDArray.length - b.downvoteUserIDArray.length);
-                return (b_score - a_score);
+                var a_rating = 0;
+                for (var prop in a.influence_ratings) {
+                    a_rating += a.influence_ratings[prop];
+                }
+                var b_rating = 0;
+                for (var prop in b.influence_ratings) {
+                    b_rating += b.influence_ratings[prop];
+                }
+
+                return (b_rating - a_rating);
             });
 
             return post_array;
         } else if (Template.instance().data.type == "tag") {
-            var postIDs = [];
-            Post_tags.find({'tag': Template.instance().data.object }).forEach(function(doc) {
-                postIDs.push(doc.postID);
-            }, { 'reactive': false });
 
             var post_array = Posts.find({
-                '_id' : {
-                    '$in' : postIDs,
-                }
-            }).fetch();
+                'tags' : Template.instance().data.object,
+            }, { 'reactive': false }).fetch();
             
             post_array.sort(function(a, b) {
-                var a_score = (a.upvoteUserIDArray.length - a.downvoteUserIDArray.length);
-                var b_score = (b.upvoteUserIDArray.length - b.downvoteUserIDArray.length);
-                return (b_score - a_score);
+                var a_rating = 0;
+                for (var prop in a.influence_ratings) {
+                    a_rating += a.influence_ratings[prop];
+                }
+                var b_rating = 0;
+                for (var prop in b.influence_ratings) {
+                    b_rating += b.influence_ratings[prop];
+                }
+
+                return (b_rating - a_rating);
             });
             
             return post_array;
