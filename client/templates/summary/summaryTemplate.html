@@ -3,7 +3,7 @@
         <div class="col-md-8">
             <div class="col-md-1" id="voteArrows">
                 <div class="row">
-                    <button type="button" id="upvote-button" class="btn btn-default {{#if up_pressed}}pressed btn-info{{/if}}" style="text-align: center">
+                    <button type="button" id="upvote-summary-button" class="btn btn-default {{#if up_pressed}}pressed btn-info{{/if}}" style="text-align: center">
                         <span class="glyphicon glyphicon-arrow-up"></span>
                     </button>
                 </div>
@@ -11,7 +11,7 @@
                     <span>{{influence}}</span>
                 </div>
                 <div class="row">
-                    <button type="button" id="downvote-button" class="btn btn-default {{#if down_pressed}}pressed btn-danger{{/if}}">
+                    <button type="button" id="downvote-summary-button" class="btn btn-default {{#if down_pressed}}pressed btn-danger{{/if}}">
                         <span class="glyphicon glyphicon-arrow-down"></span>
                     </button>
                 </div>
@@ -19,7 +19,7 @@
             <div class="well well-lg" style="{{#if is_official_abstract}}background: #aaf{{/if}}">
                 <div>
                     {{#if user_can_delete}}
-                    <button id="delete-summary" class="btn btn-sm btn-danger" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    <button id="delete-summary" type="button" class="btn btn-sm btn-danger" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
                     {{/if}}
                     {{#if user_can_modify}}
                     {{#if edit_mode}}

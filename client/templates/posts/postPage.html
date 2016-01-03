@@ -83,9 +83,9 @@
                     {{> summaryTemplate}}
                 {{/each}}
             {{else}}
-                {{#each topSummary}}
+                {{#with topSummary}}
                     {{> summaryTemplate}}
-                {{/each}}
+                {{/with}}
             {{/if}}
         </div>
     </div>
@@ -195,10 +195,10 @@
                 <label>Tags:</label>
                 {{#each tags}}
                 {{#mathjax}}
-                <a href="{{pathFor 'tagPage'}}">{{tag}}</a>
+                <a href="{{pathFor route='tagPage' data=tag_to_object}}">{{this}}</a>
                 {{/mathjax}}
                 {{#if loggedIn}}
-                <span id="remove_tag" tag="{{tag}}" tag_id="{{_id}}" class="glyphicon glyphicon-remove" style="color:red"></span>
+                <span id="remove_tag" tag="{{this}}" class="glyphicon glyphicon-remove" style="color:red"></span>
                 {{/if}}
                 &nbsp;
                 {{/each}}

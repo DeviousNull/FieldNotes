@@ -258,8 +258,8 @@ var validationList = {
             }]),
         },
         'references': [
-            {'postID': Comments},
-            {'postID': Summaries},
+            //{'postID': Comments},
+            //{'postID': Summaries},
         ]
     },
     'Comments' : {
@@ -272,8 +272,8 @@ var validationList = {
             'date':       valMatches(String),
         },
         'references': [
-            {'parentID':  Comments},
-            {'commentID': Comment_ratings},
+            //{'parentID':  Comments},
+            //{'commentID': Comment_ratings},
         ]
     },
     'Categories':{
@@ -373,7 +373,7 @@ var validationList = {
         'key': [ 'userID', 'commentID' ],
         'format': {
             'userID':    valIsCurrentUserID,
-            'commentID': valIsForeignKey(Comments),
+            //'commentID': valIsForeignKey(Comments),
             'isUpvote':  valMatches(Boolean),
         },
         'references': [
@@ -576,7 +576,7 @@ function denyThunkFactory(collection, name) {
 * Database Hooks *
 ******************/
 
-Posts.allow(allowThunkFactory('Posts'));
+/*Posts.allow(allowThunkFactory('Posts'));
 Posts.deny(denyThunkFactory(Posts, 'Posts'));
 
 Comments.allow(allowThunkFactory('Comments'));
@@ -613,4 +613,4 @@ Post_tags.allow(allowThunkFactory('Post_tags'));
 Post_tags.deny(denyThunkFactory(Post_tags, 'Post_tags'));
 
 Term_tags.allow(allowThunkFactory('Term_tags'));
-Term_tags.deny(denyThunkFactory(Term_tags, 'Term_tags'));
+Term_tags.deny(denyThunkFactory(Term_tags, 'Term_tags'));*/

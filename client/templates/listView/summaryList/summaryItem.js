@@ -1,29 +1,19 @@
 Template.summaryItem.helpers({
     //Return the title of a post for the summaryItems
-    'title': function(_summaryID){
-        var summary = Summaries.findOne({_id: _summaryID});
-        if (!summary) {
-            return "SID:" + _summaryID;
-        }
-
-        var post = Posts.findOne({_id: summary.postID});
-        if (!post) {
-            return "PID:" + summary.postID;
-        }
-
-        return post.title;
+    'title': function() {
+        return Posts.findOne(this.postID).title;
     },
 
-    'markdownedText': function(text) {
+    'markdownedText': function() {
         var converter = new Showdown.converter();
 
         //return text with reinstated underscores in place of <em> & </em>
-        return converter.makeHtml(text).replace(/<em>|<\/em>/g,"_");
+        return converter.makeHtml(this.text).replace(/<em>|<\/em>/g,"_");
     },
 
     //Return the username from a user id
-    'userName': function(userID){
-        var user = Meteor.users.findOne(userID)
+    'submitter': function(){
+        var user = Meteor.users.findOne(this.userID)
         if (!user) {
             return "UID:" + userID;
         }
@@ -31,12 +21,17 @@ Template.summaryItem.helpers({
     },
 
     'postLinkData': function() {
-        var summary = Summaries.findOne({_id: this._id});
-        return {_id: summary.postID};
+        return {'_id': this.postID};
     },
 
     'influence': function() {
-        return (this.upvoteUserIDArray.length - this.downvoteUserIDArray.length);
+        var rating = 0;
+
+        for (var prop in this.ratings) {
+            rating += this.ratings[prop];
+        }
+
+        return rating;
     }
 
 });

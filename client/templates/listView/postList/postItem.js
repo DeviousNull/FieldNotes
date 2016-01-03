@@ -16,7 +16,33 @@ Template.postItem.helpers({
     },
 
     'top_summary': function() {
-        return Summaries.findOne({postID: this._id});
+        var summaries = Template.instance().data.summaries;
+
+        var top_summary = false;
+        var top_rating = Number.NEGATIVE_INFINITY;
+
+        summaries.forEach(function(summary) {
+            var rating = 0;
+            for (var prop in summary.ratings) {
+                rating += summary.ratings[prop];
+            }
+
+            if (rating > top_rating) {
+                top_summary = summary;
+                top_rating = rating;
+            }
+        });
+
+        var copy = {
+            'postID': Template.instance().data._id,
+            'userID': top_summary.userID,
+            'isOfficialAbstract': top_summary.isOfficialAbstract,
+            'createdAt': top_summary.createdAt,
+            'text': top_summary.text,
+            'ratings': top_summary.ratings,
+        };
+
+        return copy;
     },
 
     'community_quality_rating': function() {
@@ -36,7 +62,7 @@ Template.postItem.helpers({
             return false
         }
 
-        return (this.upvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+        return (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === 1);
     },
 
     'down_pressed': function() {
@@ -44,11 +70,17 @@ Template.postItem.helpers({
             return false
         }
 
-        return (this.downvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+        return (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === -1);
     },
 
     'influence': function() {
-        return (this.upvoteUserIDArray.length - this.downvoteUserIDArray.length);
+        var influence = 0;
+
+        for (var prop in this.influence_ratings) {
+            influence += this.influence_ratings[prop];
+        }
+
+        return influence;
     }
 });
 
@@ -58,14 +90,14 @@ Template.postItem.events({
             return;
         }
 
-        Posts.update(this._id, {
-            '$pull': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        var vote;
+        if (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === 1) {
+            vote = 0;
+        } else {
+            vote = 1;
+        }
+
+        Meteor.call('set-post-influence-rating', Template.instance().data._id, vote);
     },
 
     'click #downvote-button': function(e) {
@@ -73,14 +105,14 @@ Template.postItem.events({
             return;
         }
 
-        Posts.update(this._id, {
-            '$pull': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        var vote;
+        if (Meteor.user()._id in this.influence_ratings && this.influence_ratings[Meteor.user()._id] === -1) {
+            vote = 0;
+        } else {
+            vote = -1;
+        }
+
+        Meteor.call('set-post-influence-rating', Template.instance().data._id, vote);
     },
 
 });

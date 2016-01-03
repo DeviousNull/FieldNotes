@@ -4,39 +4,54 @@ Template.summaryTemplate.onCreated(function() {
 });
 
 Template.summaryTemplate.events({
-    'click #upvote-button': function(e) {
-        if (!Meteor.user()) {
-            return;
+    'click #upvote-summary-button': function(e) {
+        var key = {
+            'userID': this.userID,
+            'text': this.text,
+            'isOfficialAbstract': this.isOfficialAbstract,
+            'createdAt': this.createdAt,
+        };
+
+        var new_rating;
+
+        if (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === 1) {
+            new_rating = 0;
+        } else {
+            new_rating = 1;
         }
 
-        Summaries.update(this._id, {
-            '$pull': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        Meteor.call('set-post-summary-rating', this.postID, key, new_rating);
     },
 
-    'click #downvote-button': function(e) {
-        if (!Meteor.user()) {
-            return;
+    'click #downvote-summary-button': function(e) {
+        var key = {
+            'userID': this.userID,
+            'text': this.text,
+            'isOfficialAbstract': this.isOfficialAbstract,
+            'createdAt': this.createdAt,
+        };
+
+        var new_rating;
+
+        if (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === -1) {
+            new_rating = 0;
+        } else {
+            new_rating = -1;
         }
 
-        Summaries.update(this._id, {
-            '$pull': {
-                'upvoteUserIDArray': Meteor.user()._id,
-            },
-            '$addToSet': {
-                'downvoteUserIDArray': Meteor.user()._id,
-            }
-        });
+        Meteor.call('set-post-summary-rating', this.postID, key, new_rating);
     },
 
     'click #delete-summary': function(e) {
         if (confirm("Are you sure you want to delete this summary?")) {
-            Meteor.call('delete-summary', this._id);
+            var key = {
+                'userID': this.userID,
+                'text': this.text,
+                'isOfficialAbstract': this.isOfficialAbstract,
+                'createdAt': this.createdAt,
+            };
+
+            Meteor.call('remove-post-summary', this.postID, key);
         }
     },
 
@@ -47,13 +62,18 @@ Template.summaryTemplate.events({
     'click #save-summary': function(e) {
         Template.instance().editMode.set(false);
 
-        var updatedSummary = {
-            $set : {
-                'text': Template.instance().$('textarea#summary-text').val(),
-            }
+        var key = {
+            'userID': this.userID,
+            'text': this.text,
+            'isOfficialAbstract': this.isOfficialAbstract,
+            'createdAt': this.createdAt,
         };
 
-        Summaries.update(this._id, updatedSummary);
+        var mod = {
+            'text': Template.instance().$('textarea#summary-text').val(),
+        };
+
+        Meteor.call('update-post-summary', this.postID, key, mod);
     },
 });
 
@@ -70,7 +90,7 @@ Template.summaryTemplate.helpers({
             return false
         }
 
-        return (this.upvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+        return (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === 1);
     },
 
     'down_pressed': function() {
@@ -78,11 +98,17 @@ Template.summaryTemplate.helpers({
             return false
         }
 
-        return (this.downvoteUserIDArray.indexOf(Meteor.user()._id) !== -1);
+        return (Meteor.user()._id in this.ratings && this.ratings[Meteor.user()._id] === -1);
     },
 
     'influence': function() {
-        return (this.upvoteUserIDArray.length - this.downvoteUserIDArray.length);
+        var rating = 0;
+        
+        for (var prop in this.ratings) {
+            rating += this.ratings[prop];
+        }
+        
+        return rating;
     },
 
     'is_official_abstract': function() {

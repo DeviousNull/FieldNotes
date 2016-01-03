@@ -16,14 +16,14 @@
     <div class="col-md-7">
       <div class="panel panel-primary text-left">
         <div class="panel-heading">
-          <a href="{{pathFor 'postPage' data=postLinkData}}" class="panel-title">{{title _id}}</a>
+          <a href="{{pathFor 'postPage' data=postLinkData}}" class="panel-title">{{title}}</a>
         </div>
         <div class="body">
           <div class="row text-center">
             <div class="col-md-12">
               {{#mathjax}}
               <span>
-                {{#markdown}}{{{markdownedText text}}}{{/markdown}}&nbsp;
+                {{#markdown}}{{{markdownedText}}}{{/markdown}}&nbsp;
               </span>
               {{/mathjax}}
             </div>
@@ -35,7 +35,7 @@
                 Influence: {{influence}}
               </div>
               <div class="col-md-9 text-left">
-                <small>&nbsp;&nbsp;&nbsp;&nbsp;Submitted ten seconds ago by {{userName userID}}</small>
+                <small>&nbsp;&nbsp;&nbsp;&nbsp;Submitted ten seconds ago by {{submitter}}</small>
               </div>
             </div>          
         </div>

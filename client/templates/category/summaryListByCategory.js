@@ -4,8 +4,16 @@ Template.summaryListByCategory.helpers({
         var summaries = [];
 
         Posts.find({categoryID: _categoryID}, { 'reactive': false }).forEach(function(post) {
-            Summaries.find({postID: post._id}, { 'reactive': false }).forEach(function(summary) {
-                summaries.push(summary);
+            post.summaries.forEach(function(summary) {
+                var copy = {
+                    'postID': post._id,
+                    'userID': summary.userID,
+                    'isOfficialAbstract': summary.isOfficialAbstract,
+                    'createdAt': summary.createdAt,
+                    'text': summary.text,
+                    'ratings': summary.ratings,
+                };
+                summaries.push(copy);
             });
         });
 
